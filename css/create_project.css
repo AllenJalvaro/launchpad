@@ -1,0 +1,113 @@
+h2 {
+    color: var(--pblue-color);
+    font-size: 25px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+form {
+    max-width: 600px;
+    margin: auto;
+    background: rgba(255, 255, 255, 0.8); 
+    padding: 30px;
+    border-radius: 8px;
+}
+
+label {
+    display: block;
+    margin: 10px 0 5px;
+    font-weight: bold;
+}
+
+input[type=text]{
+    height: 30px;
+    
+}
+#projectName{
+    padding-left: 10px;
+}
+#projectDescription{
+    padding-top: 10px;
+    padding-left: 10px;
+    height: 60px;
+}
+#memberSearch{
+    padding-left: 10px;
+}
+#mentorSearch{
+    padding-left: 10px;
+}
+
+
+input[type="text"],
+textarea,
+input[type="file"] {
+    width: 100%;
+    padding-left: 5px;
+    box-sizing: border-box;
+    background-color: rgba(255, 255, 255, 0.8);
+    border: 1px solid var(--pblue-color);
+    font-family: inherit;
+    font-size: 15px;
+    border-radius: 8px;
+    transition: all 0.375s;
+}
+
+input[type="text"]:hover,
+textarea:hover,
+input[type="file"]:hover {
+    border: 1px solid var(--pyellow-color);
+}
+
+
+@media (max-width: 500px) {
+    form {
+        width: 100%;
+    }
+}
+
+#submit-btn{
+    background-color: var(--pblue-color);
+    color: #f9f9f9;
+    padding: 10px 15px;
+    border: 0;
+    border-radius: 4px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    text-align: center;
+    letter-spacing: 2px;
+    transition: all 0.375s;
+    margin-top: 5px;
+}
+
+#submit-btn:hover {
+    background: var(--bhov-color);
+}
+
+
+.color-selected {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+/* Add this CSS to your existing stylesheet (create_project.css) */
+
+.color-selected div {
+    background-color: #ddeffe;
+    padding: 8px;
+    margin: 5px;
+    border-radius: 5px;
+    display: inline-block;
+    border: 1px solid #93c5ff; /* Add this line for the border */
+}
+
+.color-selected span {
+    color: #dd041a;
+    cursor: pointer;
+    max-width: fit-content;
+    margin-left: 5px;
+}
+

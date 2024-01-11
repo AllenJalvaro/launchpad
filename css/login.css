@@ -1,0 +1,212 @@
+
+  @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap');
+
+
+:root{
+    --pblue-color: #006BB9;
+    --pyellow-color: #FF9D00;
+    --bhov-color: #093a5d;
+}
+
+*{
+    box-sizing: border-box;
+}
+
+
+
+html, body, .wrapper{
+    height: 100%;
+}
+
+body{
+    display: grid;
+    place-items: center;
+    margin: 0;
+    padding: 0 24px;
+    background-image: url("/launchpad/images/background.svg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    font-family: 'Montserrat', sans-serif;
+    color: #000;
+    animation: rotate 6s infinite alternate linear;
+}
+
+.login-card{
+    position: relative;
+    z-index: 3;
+    width: 100%;
+    margin: 0 20px;
+    padding: 70px 30px 44px;
+    border-radius: 1.25rem;
+    background: #ffffff94;
+    text-align: center;
+}
+.login-card .login-img{
+    max-width: 10%;
+    height: auto;
+}
+.login-card .login-img, span {
+    vertical-align: middle;
+    display: inline;
+}
+.login-card > h2{
+    color: var(--pblue-color);
+    font-size: 36px;
+    font-weight: 700;
+    margin: 0 0 12px;
+    vertical-align: middle;
+}
+.btn-continue-google {
+    border: none;
+    background-color: #ffffff00; 
+    color: black; 
+    border: 1px solid rgba(0, 0, 0, 0.2); 
+    font-family: inherit;
+    font-size: 15px; 
+    border-radius: 1.25rem;
+    transition: all 0.375s;
+    width: 100%; 
+    height: 50px; 
+    display: flex;
+    align-items: center;
+    justify-content: center; 
+    cursor: pointer;
+    margin-bottom: 10px;
+  }
+  .or{
+    font-size: 15px;
+    color: #00000089;
+  }
+
+  .btn-continue-google img {
+    margin-right: 10px;
+  }
+
+  .btn-continue-google:hover {
+    background-color: rgba(0, 0, 0, 0.2); 
+  }
+
+.in{
+    color: var(--pyellow-color);
+}
+
+.login-card > h5{
+    color: rgba(0, 0, 0, 0.509);
+    margin: 0 0 30px;
+    font-weight: 500;
+}
+
+.login-form{
+    width: 100%;
+    margin-top: 10px;
+    display: grid;
+    gap: 16px;
+}
+
+.login-form > input, .login-form > button, .password-input{
+    width: 100%;
+    height: 50px;
+}
+
+.login-form > input, .password-input {
+    background-color: #ffffff00;
+    border: 1px solid var(--pblue-color);
+    font-family: inherit;
+    font-size: 15px;
+    padding: 0 16px;
+    border-radius: 1.25rem;
+    transition: all 0.375s;
+}
+
+.login-form > input:hover, .password-input:hover{
+    border: 1px solid var(--pyellow-color);
+}
+
+.login-form > button{
+    cursor: pointer;
+    width: 100%;
+    padding: 0 16px;
+    border-radius: 1.25rem;
+    background: var(--pblue-color);
+    color: #f9f9f9;
+    border: 0;
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 600;
+    text-align: center;
+    letter-spacing: 2px;
+    transition: all 0.375s;
+    margin-top: 5px;
+}
+
+.login-form > button:hover{
+    background: var(--bhov-color);
+}
+.login-form > span{
+    color: #000;
+    font-size: 0.9rem;
+}
+
+.login-form > span > a{
+    color: var(--pblue-color);
+    font-size: 0.9rem;
+    text-align: left;
+    text-decoration: none;
+    margin-bottom: 6px;
+    transition: all 0.375s;
+}
+
+.login-form > span > a:hover{
+    color: var(--pyellow-color);
+}
+
+
+.alertm {
+    color: #dd041a;
+    padding: 10px;
+    font-size: 14px;
+    font-weight: 500;
+    border-radius: 13px;
+    margin: 10px 0;
+}
+
+
+.password-container {
+    position: relative;
+}
+
+.password-input {
+    padding-right: 30px; 
+}
+
+.toggle-icon {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    cursor: pointer;
+}
+
+.img-pw  {
+    
+    object-fit: cover;
+    width: 20px; 
+    margin-right: 8px;
+}
+
+
+@keyframes rotate{
+    100%{
+        background-position: 15% 50%;
+    }
+}
+
+@media (width >= 500px){
+    body{
+        padding: 0;
+    }
+    .login-card{
+        margin: 0;
+        width: 400px;
+    }
+}

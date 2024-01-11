@@ -1,0 +1,53 @@
+.containerin {
+    width: 100%;
+    padding: 15px;
+    box-sizing: border-box;
+}
+
+.projectT{
+    font-weight: 700;
+}
+
+.notifNo {
+    text-decoration: none;
+    font-size: 14px;
+    margin-left: 70px;
+}
+
+.invi-card {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important; /* Optional: adjust as needed */
+    border-radius: 20px !important;
+    padding: 10px 20px !important;
+    margin: 15px !important;
+    width: 100% !important;
+    height: 80px !important;
+    background-color: white !important;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1) !important;
+}
+/* Add this CSS to your existing style or in a separate style block or file */
+
+.confirm-btn, .delete-btn {
+padding: 8px 16px;
+border: none;
+border-radius: 5px;
+cursor: pointer;
+font-weight: bold;
+}
+
+.confirm-btn {
+background-color: #006BB9; /* Green color for Confirm button */
+color: #fff; /* White text color */
+}
+
+.delete-btn {
+background-color: gray; /* Red color for Delete button */
+color: #fff; /* White text color */
+margin-left: 8px; /* Adjust spacing between buttons */
+}
+
+/* Hover effect */
+.confirm-btn:hover, .delete-btn:hover {
+filter: brightness(90%); /* Adjust brightness on hover for a subtle effect */
+}

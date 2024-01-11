@@ -1,0 +1,111 @@
+
+
+.content header {
+    text-align: center;
+}
+
+.content header h1 {
+    margin-bottom: 10px;
+}
+
+.buttonEdit {
+    background-color: #006BB9;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    text-decoration: none;
+}
+
+.buttonEdit a {
+    color: #fff;
+    text-decoration: none;
+}
+.buttonEdit:hover{
+    background-color: #005796;
+}
+
+.profile-card {
+    background: #ffffff94;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    padding: 20px;
+    margin-top: 20px;
+    padding-bottom: 30px;
+    width: 70%;
+    margin: auto;
+    text-align: center;
+    justify-content: center;
+}
+
+.form-container {
+    text-align: center;
+    padding: 20px;
+}
+
+.avatar {
+    width: 150px;
+    height: 150px;
+    background-color: #006BB9;
+    color: #fff;
+    font-size: 48px;
+    line-height: 150px;
+    border-radius: 50%;
+    margin: 0 auto;
+}
+
+.form-container form {
+    margin-top: 20px;
+    text-align: left;
+}
+
+.form-container form label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.form-container form input {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+.form-container form input[readonly] {
+    background-color: #fff;
+}
+
+.editp a{
+    padding: 20px;
+    padding-bottom: 20px;
+}
+
+#buttonLogout button {
+    background-color: #fff;
+    color: red;
+    font-weight: 550;
+    border: 2px solid red;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+#buttonLogout button span {
+    display: flex;
+    align-items: center;
+}
+
+#buttonLogout button i {
+    margin-right: 10px;
+}
+
+#buttonLogout button:hover{
+    background-color: rgb(255, 177, 177);
+    color: #fff;
+    border: 2px solid red;
+}

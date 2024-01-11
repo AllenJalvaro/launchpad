@@ -1,0 +1,189 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap');
+
+* {
+    box-sizing: border-box;
+}
+
+:root {
+    --pblue-color: #006BB9;
+    --pyellow-color: #FF9D00;
+    --bhov-color: #093a5d;
+}
+
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+body {
+    margin: 0;
+    background: url("/launchpad/images/background-light.svg");
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    color: #262626;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 250px;
+    height: 100vh;
+    padding: 40px 10px 30px 10px;
+    background: #fff;
+    overflow-y: auto; 
+   
+}
+
+.content {
+    margin-top: 20px;
+    margin-left: 270px;
+    padding: 20px;
+}
+
+
+.sidebar-header {
+    width: 100%;
+    margin-bottom: 30px;
+}
+
+.logo-img {
+    margin-left: 14px;
+    height: 32px;
+}
+
+.sidebar button {
+    height: 60px;
+    width: 230px;
+    background: transparent;
+    border: 0;
+    padding: 0;
+    font-family: inherit;
+    cursor: pointer;
+}
+
+.divider-company {
+    font-size: 12px;
+    font-weight: 700;
+    color: #7373739c;
+    margin-left: 10px;
+}
+
+.sidebar button > span {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    height: 48px;
+    padding: 0 12px;
+    border-radius: 24px;
+    line-height: 1;
+}
+
+.sidebar button:hover > span {
+    background: #00000013;
+}
+
+.sidebar button:active > span :is(i, img) {
+    scale: 1.05;
+}
+
+.sidebar button > span > span {
+    transition: 0.3s;
+}
+
+.sidebar a.active button > span {
+    background-color: #006cb925;
+}
+
+.sidebar a.active button:hover > span {
+    background: #006cb925;
+}
+
+.sidebar button i {
+    position: relative;
+    font-size: 28px;
+    transition: 0.2s;
+}
+
+.sidebar button img {
+    width: 20px;
+    height: 20px;
+    transition: 0.2s;
+}
+
+.sidebar button i > span {
+    display: grid;
+    place-items: center;
+    height: 20px;
+    padding: 0 4px;
+    border-radius: 10px;
+    position: absolute;
+    top: -5px;
+    right: -10px;
+    border: 1px solid #fff;
+    background: #ff2f40;
+    color: #f9f9f9;
+    font-size: 10px;
+}
+
+.sidebar button i > em {
+    display: block;
+    width: 10px;
+    height: 10px;
+    background: var(--pblue-color);
+    position: absolute;
+    border-radius: 10px;
+    top: 2px;
+    right: -1px;
+    border: 1px solid #fff;
+    color: #f9f9f9;
+    font-size: 12px;
+    font-family: 'Segoe UI';
+}
+
+.sidebar button span {
+    font-size: 13px;
+}
+
+.sidebar > nav {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column
+}
+
+
+.avatar2 {
+    width: 30px;
+    height: 30px;
+    background-color: #006BB9;
+    color: #fff;
+    font-size: 12px;
+    line-height: 30px;
+    border-radius: 50%;
+}
+
+.circle-avatar {
+    width: 30px; 
+    height: 30px;
+    border-radius: 50%; 
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.circle-avatar > .img-company {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; 
+}
+
+.circle-avatar > img {
+   
+    display: inline-block;
+    vertical-align: middle;
+}
+
