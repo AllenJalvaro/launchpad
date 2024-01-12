@@ -387,9 +387,11 @@ if (isset($_POST['submitBtnPitching'])) {
     <link rel="icon" href="/launchpad/images/favicon.ico" id="favicon">
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-    <link rel="stylesheet" href="css/navbar.css">
+
+   
     <link rel="stylesheet" href="css/company.css">
-    <link rel="stylesheet" href="css/timeline.css">
+    <link rel="stylesheet" href="css/timeline.css"> 
+    <link rel="stylesheet" href="css/navbar.css">
     <script>
         function changeFavicon(url) {
             const favicon = document.getElementById('favicon');
@@ -432,7 +434,7 @@ if (isset($_POST['submitBtnPitching'])) {
         }
 
         .process-wrapper {
-            width: 70%;
+            width: 85%;
             margin: auto;
         }
 
@@ -457,7 +459,8 @@ if (isset($_POST['submitBtnPitching'])) {
             display: flex;
             flex-direction: column;
             align-items: flex-start;
-            background-color: white;
+            background-color: transparent;
+            /* BACKGROUND COLOR TRANSPARENT */
         }
 
         .section-content form {
@@ -483,29 +486,36 @@ if (isset($_POST['submitBtnPitching'])) {
 
         .saveBtn {
 
-            background-color: #013220;
+            background-color: #006BB9;
             color: #ffffff;
 
         }
 
         .saveBtn:hover {
-            background-color: #DA9898;
-            /* Change the background color on hover */
-            color: #000000;
-            /* Change the text color on hover */
+            background-color: #1b6499;
         }
 
-        .submitBtn {
-            background-color: #00FF22;
-            color: #ffffff;
+        .mentorBtn {
+            background-color: transparent;
+            color: #006BB9;
+            border: 1px solid #006BB9;
+        }
+
+
+        .mentorBtn:hover {
+            background-color: #006cb956;
+        }
+
+        .evalBtn {
+            background-color: transparent;
+            color: #006BB9;
+            border: 1px solid #006BB9;
 
         }
 
-        .submitBtn:hover {
-            background-color: #86DF8B;
-            /* Change the background color on hover */
-            color: #000000;
-            /* Change the text color on hover */
+
+        .evalBtn:hover {
+            background-color: #006cb956;
         }
 
         .img-container {
@@ -532,6 +542,142 @@ if (isset($_POST['submitBtnPitching'])) {
             border: 2px solid black;
             margin-top: 30px;
         }
+
+        .phaseSection {
+            background-color: white;
+            padding: 50px;
+            border-radius: 30px;
+            margin-bottom: 30px;
+        }
+
+        .sectionTitle {
+            color: #006BB9 !important;
+            font-weight: bold;
+            font-size: 25px !important;
+            margin: 0;
+        }
+        .projectOverviewDirection,
+        .projectOverviewDirection2 {
+            text-align: left;
+            font-size: 14px !important;
+        }
+
+        .projectOverview-textarea {
+            background-color: transparent;
+            margin-top: 30px;
+            resize: none;
+            border-radius: 10px;
+        }
+
+        .feedbackTitle {
+            margin: 20px 0px;
+            font-weight: bold;
+            text-align: left;
+            color: #093a5d;
+        }
+
+        .feedbackSection {
+            height: 150px;
+            overflow: auto;
+            padding: 10px;
+            font-size: 11px;
+            text-align: left;
+        }
+
+        .feedbackBlock {
+            margin-bottom: 10px;
+            border-bottom: 1px solid #e6e6e6;
+            padding-bottom: 5px;
+        }
+
+        .feedback-info {
+            margin-bottom: 5px;
+        }
+
+        .commenter {
+            font-weight: bold;
+            color: black;
+        }
+
+        .feedbackdate {
+            color: gray;
+            margin-left: 5px;
+        }
+
+        .feedbackContent {
+            font-size: 13px !important;
+            color: black;
+            margin-top: 2px;
+            text-align: left;
+        }
+
+
+        .feedbackSection::-webkit-scrollbar {
+            width: 12px;
+        }
+
+        .feedbackSection::-webkit-scrollbar-thumb {
+            background-color: #888;
+            border-radius: 6px;
+        }
+
+        .feedbackSection::-webkit-scrollbar-track {
+            background-color: #eee;
+        }
+
+        .fileInput {
+            display: none;
+        }
+
+        .fileInputLabel {
+            display: inline-block;
+            padding: 12px 20px;
+            border: 2px solid #006BB9;
+            border-radius: 5px;
+            background-color: transparent;
+            color: #006BB9;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+            margin-bottom: 15px;
+        }
+
+        .fileInputLabel:hover {
+            background-color: #006BB9;
+            color: #fff;
+        }
+
+        .fileInput[type="file"] {
+            position: absolute;
+            opacity: 0;
+            pointer-events: none;
+            width: 100%;
+            height: 100%;
+        }
+
+        .content {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .projectMenu {
+        display: flex;
+        align-items: center;
+    }
+
+    .projectMenu a {
+        margin: 0 20px; 
+        text-decoration: none;
+        color: #006BB9;
+    font-size: 13px !important;
+    }
+
+.deleteProjectBTN{
+    color: #d93e3e !important;
+}
+
     </style>
 </head>
 
@@ -589,7 +735,7 @@ if (isset($_POST['submitBtnPitching'])) {
                                         <?php endif; ?>
                                     </div>
                                     <span class="create-company-text">
-                                        <?php echo $row['Company_name']; ?>
+                                        <?php echo $row['Company_name']; $companyName=$row['Company_name'];?>
                                     </span>
                                 </span>
                             </button>
@@ -623,6 +769,7 @@ if (isset($_POST['submitBtnPitching'])) {
 
 
     </aside>
+    
     <?php
     $email = $_SESSION['email'];
 
@@ -644,6 +791,12 @@ if (isset($_POST['submitBtnPitching'])) {
 
 
     <div class="content">
+    <div class="projectMenu">
+    <a href="#"> <i class="fas fa-edit"></i> Edit Project Name</a>
+    <a href="#"><i class="fas fa-users"></i> See Members</a>
+    <a href="#" class="deleteProjectBTN"> <i class="fas fa-trash-alt"></i> Delete Project</a>
+</div>
+   
         <?php
         if (isset($_GET['project_id'])) {
             //PROJECTID
@@ -659,28 +812,23 @@ if (isset($_POST['submitBtnPitching'])) {
 
             ?>
             <!-- echo the company id here -->
-            <div style="text-decoration: none;
-            display: flex !important;
-            align-items: center !important;
-            justify-content: space-between !important; width: 100%;
-           
-            display: flex !important;
-            align-items: center !important;
-            justify-content: space-between !important;
-            padding: 30px; !important;
-            margin: 15px !important;
-            width: 90% !important;
-            height: 80px !important;
-            ">
-            <div><span style="font-size: medium;"> <a href="company_view.php?Company_id=<?php echo $_SESSION['copid']; ?>" style=" text-decoration:none; color:#006BB9">
-                <!-- &larr; -->
-                 Back</a></span></div><br>
-                 <div> <h1 style="margin: 80px; text-decoration: none; line-height: normal; font-family: Arial, Helvetica, sans-serif; font-style: normal; text-transform: none; text-decoration: none; letter-spacing: normal;">
-                    <?php echo $project_name ?>
-                </h1></div>
-               
-               
-            </div>
+            <div style="text-decoration: none; display: flex; align-items: center; justify-content: space-between; width: 90%; padding: 30px; margin: 15px; height: 80px;">
+            
+    <div style="text-align: left; position:fixed; margin: -50px !important" >
+        <span style="font-size: medium;">
+            <a href="company_view.php?Company_id=<?php echo $_SESSION['copid']; ?>"
+                style="text-decoration:none; color:#006BB9;"title="Back"><i class="fas fa-angle-left" style="font-size: 40px;"></i>
+
+            </a>
+        </span>
+    </div>
+    <div style="text-align: center; flex-grow: 1;">
+        <h1 style="margin: 0; text-decoration: none; line-height: normal; font-family: Arial, Helvetica, sans-serif; font-style: normal; text-transform: none; letter-spacing: normal;">
+            <?php echo $project_name ?>
+        </h1>
+    </div>
+</div>
+
             <div class="process-wrapper">
                 <div id="progress-bar-container">
                     <ul>
@@ -765,22 +913,73 @@ if (isset($_POST['submitBtnPitching'])) {
                                 <label for="project_overview">
                                     <h5>Project Overview: </h5>
                                 </label>
-                                <textarea name="project_overview" cols="100"
-                                    rows="30"><?php if (isset($overview))
-                                        echo $overview ?></textarea>
+                                <textarea name="project_overview" cols="100" rows="30"><?php if (isset($overview))
+                                    echo $overview ?></textarea>
 
                                     <h5>Comment overview</h5>
-                                    <textarea cols="100" rows="5"
-                                        readonly><?php if (isset($comment_overview))
-                                        echo $comment_overview; ?></textarea>
+                                    <textarea cols="100" rows="5" readonly><?php if (isset($comment_overview))
+                                    echo $comment_overview; ?></textarea>
                                 <?php
                             } else {
                                 //if wala pang record
                                 ?>
-                                <label for="project_overview">
-                                    <h5>Project Overview: </h5>
-                                </label>
-                                <textarea name="project_overview" cols="100" rows="30" required></textarea>
+                                <div class="phaseSection">
+                                    <p class="sectionTitle">
+                                        1. Project Overview</p>
+
+                                    <p class="projectOverviewDirection">In this space, provide a comprehensive summary of your
+                                        project, highlighting its key
+                                        aspects and objectives. Consider including the following elements:</p><br>
+                                    <p class="projectOverviewDirection2">
+                                        <b>Objective/Purpose:</b> Briefly describe the primary goal or purpose of your project.
+                                        What
+                                        problem does it aim to solve or what need does it fulfill?<br>
+
+                                        <b>Scope: </b>Define the boundaries and limitations of your project. What is included,
+                                        and what
+                                        is excluded? This helps set expectations for stakeholders. <br>
+
+                                        <b>Target Audience: </b>Identify the intended users or beneficiaries of your project.
+                                        Understanding your audience is crucial for tailoring the project to meet their needs.
+                                        <br>
+                                        <b>Key Features: </b>Outline the main features or functionalities that your project will
+                                        offer.
+                                        This gives readers a snapshot of what to expect.
+                                    </p>
+                                    <textarea class="projectOverview-textarea" name="project_overview" cols="100" rows="20"
+                                        required></textarea>
+                                    <div class="feedbackTitle">Feedbacks:</div>
+
+                                    <div class="feedbackSection">
+
+                                        <div class="feedbackBlock">
+
+                                            <div class="feedback-info">
+                                                <span class="commenter">Moniqua Lee</span>
+                                                <span class="feedbackdate">(Mentor) • 1hr ago</span>
+                                            </div>
+                                            <p class="feedbackContent">Oh
+                                                that's beautiful!Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+                                                eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
+                                                veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+                                                consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum
+                                                dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident,
+                                                sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                                        </div>
+                                        <div class="feedbackBlock">
+
+                                            <div class="feedback-info">
+                                                <span class="commenter">Sam Brown</span>
+                                                <span class="feedbackdate">(Evaluator) • 3 days ago</span>
+                                            </div>
+                                            <p class="feedbackContent">Oh
+                                                that's beautiful!Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+                                                eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
+                                                veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex non
+                                                proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                                        </div>
+                                    </div>
+                                </div>
                                 <?php
                             }
 
@@ -810,18 +1009,67 @@ if (isset($_POST['submitBtnPitching'])) {
                                 <input type="file" name="project_logo">
 
                                 <h5>Comment Logo</h5>
-                                <textarea cols="100" rows="5"
-                                    readonly><?php if (isset($comment_logo)) {
-                                        echo $comment_logo;
-                                    } ?></textarea>
+                                <textarea cols="100" rows="5" readonly><?php if (isset($comment_logo)) {
+                                    echo $comment_logo;
+                                } ?></textarea>
                                 <?php
                             } else {
                                 //if wala pang record
                                 ?>
-                                <label for="project_logo">
+                                <!-- <label for="project_logo">
                                     <h5>Project Logo:</h5>
                                 </label>
-                                <input type="file" name="project_logo" required>
+                                <input type="file" name="project_logo" required> -->
+
+                                <div class="phaseSection">
+                                    <p class="sectionTitle">
+                                        Project Logo</p>
+
+                                    <p class="projectOverviewDirection">In this section, kindly upload the logo your project's
+                                        logo in PNG format. Ensure the logo is original, capturing the essence of your project.
+                                        It should be a visual representation that reflects the core values and identity of your
+                                        startup</p><br>
+
+
+
+                                    <label for="projectLogo" class="fileInputLabel" id="projectLogoInputLabel"><i
+                                            class="fa fa-upload" style="color: #0f73d2;"></i> Upload your Project Logo</label>
+                                    <input id="projectLogo" class="fileInput" type="file" name="project_logo"
+                                        onchange="displayFileName('projectLogo')">
+
+
+
+
+                                    <div class="feedbackTitle">Feedbacks:</div>
+
+                                    <div class="feedbackSection">
+
+                                        <div class="feedbackBlock">
+
+                                            <div class="feedback-info">
+                                                <span class="commenter">Moniqua Lee</span>
+                                                <span class="feedbackdate">(Mentor) • 1hr ago</span>
+                                            </div>
+                                            <p class="feedbackContent">
+                                                consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum
+                                                dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident,
+                                                sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                                        </div>
+                                        <div class="feedbackBlock">
+
+                                            <div class="feedback-info">
+                                                <span class="commenter">Sam Brown</span>
+                                                <span class="feedbackdate">(Evaluator) • 3 days ago</span>
+                                            </div>
+                                            <p class="feedbackContent">
+                                                veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex non
+                                                proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+
                                 <?php
                             }
 
@@ -836,7 +1084,7 @@ if (isset($_POST['submitBtnPitching'])) {
                                 $model_canvas_ideation = $row['Project_Modelcanvas'];
                                 //if merong record
                                 ?>
-                                <h3>Project Model Canvass:</h3>
+                                <h3>Project Model Canvas:</h3>
                                 <embed type="application/pdf" src="<?php echo $model_canvas_ideation; ?>" width="580"
                                     height="600">
 
@@ -846,27 +1094,91 @@ if (isset($_POST['submitBtnPitching'])) {
                                 <input type="file" name="model_canvas">
 
                                 <h5>Comment Model Canvas</h5>
-                                <textarea cols="100" rows="5"
-                                    readonly><?php if (isset($comment_canvas))
-                                        echo $comment_canvas ?></textarea>
+                                <textarea cols="100" rows="5" readonly><?php if (isset($comment_canvas))
+                                    echo $comment_canvas ?></textarea>
 
                                 <?php
                             } else {
                                 //if wala pang record
                                 ?>
-                                <label for="model_canvas">
+                                <!-- <label for="model_canvas">
                                     <h5>Startup Model Canvas: </h5>
                                 </label>
-                                <input type="file" name="model_canvas" required>
+                                <input type="file" name="model_canvas" required> -->
+                                <div class="phaseSection">
+                                    <p class="sectionTitle">
+                                        Startup Model Canvas</p>
+
+                                    <p class="projectOverviewDirection">In this section, kindly upload your project's Model
+                                        Canvas in PDF format. The Model Canvas is a strategic management tool that provides a
+                                        holistic view of your project's key components. It typically includes sections on your
+                                        project's value proposition, customer segments, channels, revenue streams, cost
+                                        structure, and more. Ensure your Model Canvas encapsulates crucial details about your
+                                        project's business model, allowing stakeholders to understand its key elements at a
+                                        glance. If you're new to the concept, think of the Model Canvas as a snapshot of your
+                                        project's strategy and execution plan. We look forward to reviewing your comprehensive
+                                        overview!</p><br>
+
+
+                                    <label for="canvasFile" class="fileInputLabel" id="canvasFileInputLabel"><i
+                                            class="fa fa-upload" style="color: #0f73d2;"></i> Upload your Startup Model
+                                        Canvas</label>
+                                    <input id="canvasFile" class="fileInput" type="file" name="canvas_file"
+                                        onchange="displayFileName('canvasFile')">
+
+                                    <div class="feedbackTitle">Feedbacks:</div>
+
+                                    <div class="feedbackSection">
+
+                                        <div class="feedbackBlock">
+
+                                            <div class="feedback-info">
+                                                <span class="commenter">Moniqua Lee</span>
+                                                <span class="feedbackdate">(Mentor) • 1hr ago</span>
+                                            </div>
+                                            <p class="feedbackContent">
+                                                consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum
+                                                dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident,
+                                                sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                                        </div>
+                                        <div class="feedbackBlock">
+
+                                            <div class="feedback-info">
+                                                <span class="commenter">Sam Brown</span>
+                                                <span class="feedbackdate">(Evaluator) • 3 days ago</span>
+                                            </div>
+                                            <p class="feedbackContent">
+                                                veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex non
+                                                proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+
+
                                 <?php
                             }
 
                             ?>
 
-                            <div>
+                            <!-- <div style="align-self: center;">
                                 <button class="saveBtn" name="btnSave">SUBMIT</button>
-                                <!-- <button class="submitBtn" name="submitBtn">---</button> -->
+                                <button class="submitBtn" name="submitBtn">---</button>
+                            </div> -->
+                            <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                                <button class="saveBtn" name="btnSave"
+                                    style="width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; border-radius:20px; padding: 20px; font-weight: bold;">Save</button>
                             </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                                <button class="mentorBtn" name="mentorBtn"
+                                    style="width:100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;border-radius:20px; padding: 20px; font-weight: bold;">Send
+                                    to Mentor</button>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                                <!-- <button class="evalBtn" name="evalBtn" style="width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;border-radius:20px; padding: 20px; font-weight: bold; color: ;" title="You can only send to evaluators when your Ideation Phase is fully approved">Send to Evaluators</button> -->
+                            </div>
+
 
                         </form>
                     </div>
@@ -949,7 +1261,9 @@ if (isset($_POST['submitBtnPitching'])) {
                     <div class="section-content finish">
                         <div class="promotion-ui">
                             <img src="images/promotion_img.png" alt="promotion image">
-                            <h1 style="text-decoration: none; line-height: normal; font-family: Arial, Helvetica, sans-serif; font-style: normal; text-transform: none; text-decoration: none; letter-spacing: normal; text-align: ;">Your project is now ready for promotion!</h1>
+                            <h1
+                                style="text-decoration: none; line-height: normal; font-family: Arial, Helvetica, sans-serif; font-style: normal; text-transform: none; text-decoration: none; letter-spacing: normal; text-align: ;">
+                                Your project is now ready for promotion!</h1>
                             <p>Do you want to make your project public?</p>
                             <button id="make-public">MAKE PUBLIC</button>
                             <button id="not-now">NOT NOW</button>
@@ -998,6 +1312,15 @@ if (isset($_POST['submitBtnPitching'])) {
 
         ?>
     </div>
+    <script>
+        function displayFileName(inputId) {
+            const labelId = `${inputId}InputLabel`;
+            const input = document.getElementById(inputId);
+            const label = document.getElementById(labelId);
+            const fileName = input.files[0].name;
+            label.textContent = `Selected file: ${fileName}`;
+        }
+    </script>
 </body>
 
 </html>

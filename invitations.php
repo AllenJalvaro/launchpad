@@ -93,7 +93,7 @@ if ($hasCompany) {
                     <span>
                         <i><img src="\launchpad\images\invitation-icon.png" alt="home-logo" class="logo-ic"></i>
                         <span>Invitations</span>
-                        <div class="notifNo" id="notifNo" aria-hidden="true"></div>
+                        <!-- <div class="notifNo" id="notifNo" aria-hidden="true"></div> -->
                     </span>
                 </button>
             </a>
@@ -219,7 +219,7 @@ if ($hasCompany) {
 
 
 
-        <script type="text/javascript">
+        <!-- <script type="text/javascript">
             function loadDoc() {
 
                 setInterval(function () {
@@ -235,7 +235,7 @@ if ($hasCompany) {
 
             }
             loadDoc();
-        </script>
+        </script> -->
         <script>
             // JavaScript to set the initials
             document.addEventListener("DOMContentLoaded", function () {
