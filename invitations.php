@@ -97,6 +97,22 @@ if ($hasCompany) {
                     </span>
                 </button>
             </a>
+            <a href="investment.php">
+                <button>
+                    <span>
+                        <i><img src="\launchpad\images\iconinvestment.png" alt="home-logo" class="logo-ic"></i>
+                        <span>Investment Requests</span>
+                    </span>
+                </button>
+            </a>
+            <a href="collabprojects.php">
+                <button>
+                    <span>
+                        <i><img src="\launchpad\images\iconpuzzle.png" alt="home-logo" class="logo-ic"></i>
+                        <span>Collab Projects</span>
+                    </span>
+                </button>
+            </a>
             <p class="divider-company">YOUR COMPANY<a href="create-company.php" style="text-decoration: none;">
 
                     <img src="\launchpad\images\join-company-icon.png" alt="Join Company Icon" width="15px"
@@ -123,7 +139,7 @@ if ($hasCompany) {
                 <?php endforeach; ?>
             <?php endif; ?>
 
-            <p class="divider-company">COMPANIES YOU'VE JOINED</p>
+            <!-- <p class="divider-company">COMPANIES YOU'VE JOINED</p>
             <a href="#">
                 <button>
                     <span class="btn-join-company">
@@ -135,8 +151,8 @@ if ($hasCompany) {
                         <span class="join-company-text">Join companies</span>
                     </span>
                 </button>
-            </a>
-            <a href="profile.php">
+            </a> -->
+            <a href="profile.php" style="position: fixed; bottom: 0; background-color: white;">
                 <button>
                     <span>
                         <div class="avatar2" id="initialsAvatar5"></div>

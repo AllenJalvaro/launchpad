@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 11, 2024 at 04:09 PM
+-- Generation Time: Jan 12, 2024 at 08:48 AM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -82,7 +82,10 @@ CREATE TABLE `company_registration` (
 --
 
 INSERT INTO `company_registration` (`Company_ID`, `Student_ID`, `Company_name`, `Company_logo`, `Company_description`, `Registration_date`) VALUES
-(81, '00-UR-0000', 'Tekno', '-', 'Tekno Desc', '2024-01-11 07:44:19');
+(81, '00-UR-0000', 'Tekno', 'images/65a0b5122ece0.png\r\n', 'Tekno Desc', '2024-01-11 07:44:19'),
+(82, '00-UR-0000', 'Hello', 'images/65a0b5122ece0.png', 'Hello po', '2024-01-12 11:42:10'),
+(83, '00-UR-0000', 'ds', 'images/65a0c0902e5ad.png', 'ds', '2024-01-12 12:31:12'),
+(84, '00-UR-0000', 'SmartCo', 'images/65a0c0a185945.jpg', 'da', '2024-01-12 12:31:29');
 
 -- --------------------------------------------------------
 
@@ -181,7 +184,6 @@ CREATE TABLE `invitation` (
 INSERT INTO `invitation` (`InvitationID`, `ProjectID`, `InviterID`, `InviteeID`, `Status`, `InvitationDate`) VALUES
 (5, 45, '00-UR-0000', '11-UR-1111', 'PENDING', '2024-01-10 23:46:19'),
 (6, 46, '00-UR-0000', '11-UR-1111', 'PENDING', '2024-01-10 23:46:19'),
-(7, 47, '00-UR-0000', '11-UR-1111', 'ACCEPTED', '2024-01-10 23:46:19'),
 (9, 49, '00-UR-0000', '11-UR-1111', 'PENDING', '2024-01-10 23:46:19');
 
 -- --------------------------------------------------------
@@ -221,8 +223,6 @@ CREATE TABLE `project` (
 INSERT INTO `project` (`Project_ID`, `Company_ID`, `Project_title`, `Project_Description`, `Project_date`, `STATUS`) VALUES
 (45, 81, 'Helti: HealthCare System for Barangay San Manuel, Dapitan, Urdaneta', 'Heltia is a healthcare system', '2024-01-11 07:46:19', 'PRIVATE'),
 (46, 81, 'Dyslexium', 'An app for people struggling with Dyslexia', '2024-01-11 07:46:19', 'PRIVATE'),
-(47, 81, 'fsdg', 'gdsgsd', '2024-01-11 07:46:19', 'PRIVATE'),
-(48, 81, 'djghjguy', 'ityug', '2024-01-11 07:46:19', 'PRIVATE'),
 (49, 81, 'JuanaBeSafe', 'JuanaBeSafe is a system for people suffering violence', '2024-01-11 07:46:19', 'PRIVATE');
 
 -- --------------------------------------------------------
@@ -255,13 +255,6 @@ CREATE TABLE `project_member` (
   `Project_ID` int(11) NOT NULL,
   `Student_ID` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `project_member`
---
-
-INSERT INTO `project_member` (`Projectmember_ID`, `Project_ID`, `Student_ID`) VALUES
-(3, 47, '11-ur-1111');
 
 -- --------------------------------------------------------
 
@@ -318,7 +311,8 @@ CREATE TABLE `student_registration` (
 
 INSERT INTO `student_registration` (`Student_ID`, `Student_fname`, `Student_lname`, `Student_email`, `Student_password`, `Course`, `Year`, `Block`, `Student_contactno`) VALUES
 ('00-UR-0000', 'Lorem', 'Ipsum', '00ur0000@psu.edu.ph', '123', 'BS Information Technology', '1st Year', 'A', '0000000000'),
-('11-UR-1111', 'Ann', 'Jann', '11ur1111@psu.edu.ph', '123', 'BS Civil Engineering', '3rd Year', 'B', '111111111');
+('11-UR-1111', 'Ann', 'Jann', '11ur1111@psu.edu.ph', '123', 'BS Civil Engineering', '3rd Year', 'B', '111111111'),
+('22ur2222', 'Aeila', 'Dee', '22ur2222@psu.edu.ph', '123', 'BS Information Technology', '1st Year', 'D', '2222222222');
 
 --
 -- Indexes for dumped tables
@@ -470,7 +464,7 @@ ALTER TABLE `comment_pitching`
 -- AUTO_INCREMENT for table `company_registration`
 --
 ALTER TABLE `company_registration`
-  MODIFY `Company_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=82;
+  MODIFY `Company_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=85;
 
 --
 -- AUTO_INCREMENT for table `evaluation`
@@ -512,7 +506,7 @@ ALTER TABLE `pitching_phase`
 -- AUTO_INCREMENT for table `project`
 --
 ALTER TABLE `project`
-  MODIFY `Project_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=50;
+  MODIFY `Project_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=52;
 
 --
 -- AUTO_INCREMENT for table `project_evaluator`

@@ -76,7 +76,22 @@ $resultProjects = mysqli_query($conn, $projectQuery);
                         <span>Invitations</span>
                     </span>
                 </button>
-    </a>
+    </a>            <a href="investment.php">
+                <button>
+                    <span>
+                        <i><img src="\launchpad\images\iconinvestment.png" alt="home-logo" class="logo-ic"></i>
+                        <span>Investment Requests</span>
+                    </span>
+                </button>
+            </a>
+            <a href="collabprojects.php">
+                <button>
+                    <span>
+                        <i><img src="\launchpad\images\iconpuzzle.png" alt="home-logo" class="logo-ic"></i>
+                        <span>Collab Projects</span>
+                    </span>
+                </button>
+            </a>
                 <p class="divider-company">YOUR COMPANY<a href="create-company.php" style="text-decoration: none;">
                    
                    <img src="\launchpad\images\join-company-icon.png" alt="Join Company Icon" width="15px" height="15px" style="margin-left: 70px;">
@@ -111,7 +126,7 @@ $resultProjects = mysqli_query($conn, $projectQuery);
                     </span>
                 </button>
                 </a>
-<a href="#" class="active">
+<a href="#" class="active" style="position: fixed; bottom: 0; background-color: white;">
                 <button>
                     <span>
                     <div class="avatar2" id="initialsAvatar7"></div>
@@ -215,7 +230,8 @@ $resultProjects = mysqli_query($conn, $projectQuery);
     <br><br>
     <div class="editpro">
     <a href="profile.php">Back</a>
-    <header><h1>Edit my Profile</h1></header>
+    <br><br>
+   <h1>Change my Profile</h1>
 
     <form action="" method="post">
             <label for="new_studentid">Student ID:</label>
@@ -261,8 +277,8 @@ $resultProjects = mysqli_query($conn, $projectQuery);
 <br><br>
             <label for="new_student_contactno">Contact Number:</label>
             <input type="tel" name="new_student_contactno" value="<?php echo $contactNo?>" required>
-<br><br>
-            <button name="btnEditProfile" type="submit">Save Changes</button>
+<br><br><br>
+            <button name="btnEditProfile" type="submit">Change Profile</button>
         </form>
         <br><br><br>
         <hr>
@@ -278,8 +294,8 @@ $resultProjects = mysqli_query($conn, $projectQuery);
 <br><br>
             <label for="confirm_password">Confirm you password: </label>
             <input type="password" name="confirm_password" id="confirm_password" required>
-<br><br>
-            <button name="btnEditCredentials" type="submit">Save Changes</button>
+<br><br><br>
+            <button name="btnEditCredentials" type="submit">Change Password</button>
         </form>
     </div>
     </div>

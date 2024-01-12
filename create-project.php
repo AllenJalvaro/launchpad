@@ -57,13 +57,11 @@
     <title><?php echo $hasCompany && !empty($companyName) ? $companyName." - Launchpad" : 'Create Company - Launchpad'; ?></title> 
     <link rel="icon" href="/launchpad/images/favicon.ico" id="favicon">
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" href="css/navbar.css">
     <link rel="stylesheet" href="css/create_project.css">
     <style>
-        .color-selected{
-            color: green;
-            font-weight: 700;
-        }
     </style>
     <script>
         function changeFavicon(url) {
@@ -163,62 +161,122 @@
         </aside>
 
 <div class="content">
-    <h2>Create Project</h2> 
     <form method="post" action="process_create_project.php?Company_id=<?php echo $_GET['Company_id']; ?>">
 
       
+    <h2>Create New Project</h2> <br>
         <label for="projectName">Project Name:</label>
         <input type="text" id="projectName" name="projectName" required><br><br>
 
         <label for="projectDescription">Project Description:</label>
-        <textarea id="projectDescription" name="projectDescription" required></textarea><br><br>
-<hr><br>
-      
-        <label for="memberSearch">Add Members:</label><br><br>
-        <input type="text" id="memberSearch" oninput="searchMembers(this.value)"><br>
-        <div id="memberResults" class="search-results"></div><br>
-        <h4>Selected Members</h4>
- 
-        <div id="selectedMembers" class="color-selected">
-            
-          
-        </div><br><br>
-<hr><br>
+        <textarea  id="projectDescription" name="projectDescription" rows="10" required></textarea><br><br>
+
+        <label for="memberSearch">Add Members:</label>
+        <div class="search-container">
+        <i class="fas fa-search search-icon" style="color: #006BB9;"></i>
+        <input class="search-input" type="text" id="memberSearch" oninput="searchMembers(this.value)" placeholder="Search members...">
+    </div>
+        <br>
+        <div id="memberResults" class="search-results" ></div><div id="selectedMembers" class="color-selected" >
+        </div>
+<br>
     
-        <label for="mentorSearch">Add Mentor:</label><br><br>
-        <input type="text" id="mentorSearch" oninput="searchMentors(this.value)"><br>
-        <div id="mentorResults" class="search-results"></div><br>
-        <h4>Selected Mentor</h4>
-       
+        <label for="mentorSearch">Add Mentor:</label>
+        <div class="search-container">
+        <i class="fas fa-search search-icon" style="color: #006BB9;"></i>
+        <input class="search-input" type="text" id="mentorSearch" oninput="searchMentors(this.value)" placeholder="Search mentor...">
+    </div>
+        <br> <div id="mentorResults" class="search-results"></div>
         <div id="selectedMentor"  class="color-selected">
         
         </div><br>
 
-     
+        <label for="evaluatorSearch">Add Evaluators:</label>
+        
+        <div class="search-container">
+        <i class="fas fa-search search-icon" style="color: #006BB9;"></i>
+        <input class="search-input" type="text" id="evaluatorSearch" oninput="searchEvaluators(this.value)" placeholder="Search evaluators...">
+    </div>
+
+        
+        <br>
+        <div id="evaluatorResults" class="search-results"></div>
+        <div id="selectedEvaluators" class="color-selected">
+        </div>
+     <br><br>
         <button id="submit-btn" type="submit">Create Project</button>
     </form>
 </div>
 
 <script>
-    function searchMembers(query) {
-        $.ajax({
-            url: 'search_members.php',
-            type: 'POST',
-            data: { query: query },
-            success: function (data) {
-                $('#memberResults').html(data);
-                attachClickHandlers('member');
-            }
-        });
+ function searchEvaluators(query) {
+    if (query.trim() === '') {
+        $('#evaluatorResults').html('').removeAttr('style');
+        return;
     }
 
+    $.ajax({
+        url: 'search_evaluators.php',
+        type: 'POST',
+        data: { query: query },
+        success: function (data) {
+            $('#evaluatorResults').html(data).css({
+                'cursor': 'pointer',
+                'border-radius': '10px',
+                'background-color': 'transparent',
+            });
+            attachClickHandlers('evaluator');
+        }
+    });
+}
+
+
+
+
+   function searchMembers(query) {
+    if (query.trim() === '') {
+        $('#memberResults').html('').removeAttr('style'); 
+        
+        return;
+    }
+
+    $.ajax({
+        url: 'search_members.php',
+        type: 'POST',
+        data: { query: query },
+        success: function (data) {
+$('#memberResults').html(data).css({
+                'cursor': 'pointer',
+                
+                'border-radius': '10px',
+
+                'background-color': 'transparent',
+            });
+            attachClickHandlers('member');
+            
+            
+        }
+    });
+}
+
+
     function searchMentors(query) {
+        if (query.trim() === '') {
+        $('#mentorResults').html(''); 
+        return;
+    }
         $.ajax({
             url: 'search_mentors.php',
             type: 'POST',
             data: { query: query },
             success: function (data) {
-                $('#mentorResults').html(data);
+                $('#mentorResults').html(data).css({
+                'cursor': 'pointer',
+                
+                'border-radius': '10px',
+
+                'background-color': 'transparent',
+            });
                 attachClickHandlers('mentor');
             }
         });
@@ -231,12 +289,18 @@
 
             if (type === 'member') {
                 addMember(id, name);
-            } else {
+            } else if(type === 'mentor'){
                 addMentor(id, name);
+            } else if(type === 'evaluator'){
+                addEvaluator(id, name);
             }
         });
     }
-
+    function addEvaluator(evaluatorID, evaluatorName) {
+        if ($('#selectedEvaluators').find(`[data-id="${evaluatorID}"]`).length === 0) {
+            $('#selectedEvaluators').append(`<div data-id="${evaluatorID}">${evaluatorName} <span onclick="removeEvaluator('${evaluatorID}')">x</span></div>`);
+        }
+    }
     function addMember(studentID, studentName) {
         if ($('#selectedMembers').find(`[data-id="${studentID}"]`).length === 0) {
             $('#selectedMembers').append(`<div data-id="${studentID}">${studentName} <span onclick="removeMember('${studentID}')">x</span></div>`);
@@ -253,6 +317,10 @@
 
     function removeMentor(mentorID) {
         $('#selectedMentor').empty();
+    }
+    function removeEvaluator(evaluatorID) {
+        
+        $(`#selectedEvaluators [data-id="${evaluatorID}"]`).remove();
     }
 </script>
 <script>

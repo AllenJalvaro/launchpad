@@ -11,7 +11,7 @@ form {
     margin: auto;
     background: rgba(255, 255, 255, 0.8); 
     padding: 30px;
-    border-radius: 8px;
+    border-radius: 20px;
 }
 
 label {
@@ -30,7 +30,6 @@ input[type=text]{
 #projectDescription{
     padding-top: 10px;
     padding-left: 10px;
-    height: 60px;
 }
 #memberSearch{
     padding-left: 10px;
@@ -44,14 +43,15 @@ input[type="text"],
 textarea,
 input[type="file"] {
     width: 100%;
-    padding-left: 5px;
+    border-radius: 8px;
     box-sizing: border-box;
-    background-color: rgba(255, 255, 255, 0.8);
+    background-color: rgba(255, 255, 255, 0);
     border: 1px solid var(--pblue-color);
     font-family: inherit;
     font-size: 15px;
-    border-radius: 8px;
     transition: all 0.375s;
+    padding: 20px;
+    resize: none;
 }
 
 input[type="text"]:hover,
@@ -72,15 +72,16 @@ input[type="file"]:hover {
     color: #f9f9f9;
     padding: 10px 15px;
     border: 0;
-    border-radius: 4px;
+    border-radius: 10px;
     cursor: pointer;
     font-family: inherit;
-    font-size: 12px;
+    font-size: 14px;
     font-weight: 600;
     text-align: center;
     letter-spacing: 2px;
     transition: all 0.375s;
     margin-top: 5px;
+    width: 100%;
 }
 
 #submit-btn:hover {
@@ -96,6 +97,7 @@ input[type="file"]:hover {
 /* Add this CSS to your existing stylesheet (create_project.css) */
 
 .color-selected div {
+    color: #0c528c;
     background-color: #ddeffe;
     padding: 8px;
     margin: 5px;
@@ -105,9 +107,34 @@ input[type="file"]:hover {
 }
 
 .color-selected span {
-    color: #dd041a;
+    color: #0b4f8784;
     cursor: pointer;
     max-width: fit-content;
     margin-left: 5px;
+}
+
+
+.search-container {
+    position: relative;
+    width: 100%;
+}
+
+.search-input {
+    width: 100% !important; 
+    padding: 10px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    outline: none;
+    padding-left: 40px !important; 
+}
+
+.search-icon {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    left: 10px;
+    color: #006BB9; 
+    cursor: pointer;
 }
 

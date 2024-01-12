@@ -59,10 +59,13 @@ h1 {
 .editpro button {
     background-color: #007bff;
     color: #fff;
-    padding: 10px 20px;
+    padding: 20px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    width: 100%;
+    border-radius: 30px;
+    font-size: 15px;
 }
 
 .editpro button:hover {
@@ -75,10 +78,16 @@ h1 {
 }
 
 .editpro a:hover {
-    text-decoration: underline;
+   color: #FF9D00;
 }
 
 .editpro hr {
     border: 1px solid #ccc;
     margin: 40px 0;
+}
+.editpro{
+    background-color: rgba(255, 255, 255, 0.474);
+    border-radius: 20px;
+    margin-left: 200px;
+    padding: 50px !important;
 }

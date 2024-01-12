@@ -77,7 +77,22 @@ $resultProjects = mysqli_query($conn, $projectQuery);
                         <span>Invitations</span>
                     </span>
                 </button>
-    </a>
+    </a>            <a href="investment.php">
+                <button>
+                    <span>
+                        <i><img src="\launchpad\images\iconinvestment.png" alt="home-logo" class="logo-ic"></i>
+                        <span>Investment Requests</span>
+                    </span>
+                </button>
+            </a>
+            <a href="collabprojects.php">
+                <button>
+                    <span>
+                        <i><img src="\launchpad\images\iconpuzzle.png" alt="home-logo" class="logo-ic"></i>
+                        <span>Collab Projects</span>
+                    </span>
+                </button>
+            </a>
     <p class="divider-company">YOUR COMPANY<a href="create-company.php" style="text-decoration: none;">
                    
                    <img src="\launchpad\images\join-company-icon.png" alt="Join Company Icon" width="15px" height="15px" style="margin-left: 70px;">
@@ -102,7 +117,7 @@ $resultProjects = mysqli_query($conn, $projectQuery);
                 <?php endforeach; ?>
                 <?php endif; ?>
 
-
+<!-- 
 
 
                 <p class="divider-company">COMPANIES YOU'VE JOINED</p>
@@ -115,8 +130,8 @@ $resultProjects = mysqli_query($conn, $projectQuery);
                         <span class="join-company-text">Join companies</span>
                     </span>
                 </button>
-                </a>
-<a href="#" class="active">
+                </a> -->
+<a href="#" class="active" style="position: fixed; bottom: 0; background-color: white;">
                 <button>
                     <span>
                     <div class="avatar2" id="initialsAvatar2"></div>
@@ -158,14 +173,14 @@ $resultProjects = mysqli_query($conn, $projectQuery);
     <div class="content">        
         <div class="profile-card">
         <header>
-            <h1>Hello <?php echo $fname?>!</h1><br>
-            <button class="buttonEdit"><a href="edit_profile.php" class="editp">Edit Profile</a></button><br><br>
+            <h1>Hello, <?php echo $fname?>!</h1><br>
+            
         </header>
 
         <div class="form-container">
 
             <div class="avatar" id="initialsAvatar"></div><br><br>
-
+            <button class="buttonEdit"><a href="edit_profile.php" class="editp">Edit Profile</a></button><br><br>
             <form action="" method="post">
                 <label for="studentid">Student ID:</label>
                 <input type="text" id="studentid" name="studentid" value="<?php echo $stud_id?>" required readonly><br>
@@ -193,7 +208,7 @@ $resultProjects = mysqli_query($conn, $projectQuery);
         <a id="buttonLogout" href="logout.php" class="editp">
                     <button>
                         <span>
-                            <i ><img src="\launchpad\images\logout-icon.png" alt="logout-icon" class="logo-ic"></i>
+                            <i ><img src="\launchpad\images\logout-icon.png" alt="logout-icon" class="logo-ic" ></i>
                             <span idstyle="color: red">LOG OUT</span>
                         </span>
                     </button>

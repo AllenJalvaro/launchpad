@@ -354,6 +354,22 @@ if (isset($_POST['submitG'])) {
                     </span>
                 </button>
             </a>
+            <a href="investment.php">
+                <button>
+                    <span>
+                        <i><img src="\launchpad\images\iconinvestment.png" alt="home-logo" class="logo-ic"></i>
+                        <span>Investment Requests</span>
+                    </span>
+                </button>
+            </a>
+            <a href="collabprojects.php">
+                <button>
+                    <span>
+                        <i><img src="\launchpad\images\iconpuzzle.png" alt="home-logo" class="logo-ic"></i>
+                        <span>Collab Projects</span>
+                    </span>
+                </button>
+            </a>
             <p class="divider-company">YOUR COMPANY<a href="create-company.php" style="text-decoration: none;">
                    
                                 <img src="\launchpad\images\join-company-icon.png" alt="Join Company Icon" width="15px" height="15px" style="margin-left: 70px;">
@@ -380,7 +396,7 @@ if (isset($_POST['submitG'])) {
                 <?php endforeach; ?>
                 <?php endif; ?>
 
-            <p class="divider-company">COMPANIES YOU'VE JOINED</p>
+            <!-- <p class="divider-company">COMPANIES YOU'VE JOINED</p>
             <a href="#">
                 <button>
                     <span class="btn-join-company">
@@ -392,8 +408,9 @@ if (isset($_POST['submitG'])) {
                         <span class="join-company-text">Join companies</span>
                     </span>
                 </button>
-            </a>
-            <a href="profile.php">
+            </a> -->
+            <br><br>
+            <a href="profile.php"style="position: fixed; bottom: 0; background-color: white;">
                 <button>
                     <span>
                     <div class="avatar2" id="initialsAvatar3"></div>
