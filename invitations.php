@@ -138,7 +138,7 @@ if ($hasCompany) {
                     </a>
                 <?php endforeach; ?>
             <?php endif; ?>
-
+            <br><br>
             <!-- <p class="divider-company">COMPANIES YOU'VE JOINED</p>
             <a href="#">
                 <button>
@@ -215,7 +215,7 @@ if ($hasCompany) {
             while ($row = mysqli_fetch_assoc($result)) {
                 $dateString = htmlspecialchars($row['Project_date']);
                 $dateTime = new DateTime($dateString);
-                $formattedDate = $dateTime->format('m-d-y g:i A');
+                $formattedDate = $dateTime->format('j M Y, g:i a');
                 echo "
                     <div class='invi-card'>
                         <span class='projectT'>" . htmlspecialchars($row['Project_title']) . "</span>" .

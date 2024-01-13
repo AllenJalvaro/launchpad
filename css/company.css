@@ -75,6 +75,18 @@
     font-weight: bold !important;
 }
 
+.status-badge2 {
+    position: absolute !important;
+    top: 10px !important;
+    right: 10px !important;
+    padding: 8px !important;
+    background-color: rgba(255, 132, 0, 0.422) !important; 
+    color: #b24a09 !important;
+    border-radius: 8px !important;
+    font-size: 10px !important;
+    font-weight: bold !important;
+}
+
 
 
 
@@ -119,6 +131,14 @@
     font-size: 18px;
     font-weight: bold;
     margin-bottom: 5px;
+    
+}
+
+.project-title p{
+    white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 90ch;
 }
 
 .project-date {
@@ -145,3 +165,259 @@
 .search-bar > input:hover{
     border: 1px solid var(--pyellow-color);
 }
+
+.search-bar {
+    display: flex;
+    align-items: center;
+}
+
+#projectSearch {
+    margin-right: 10px; /* Adjust margin as needed */
+}
+
+.kebab-container {
+    display: flex;
+    align-items: center;
+}
+
+.kebab-menu {
+    cursor: pointer;
+}
+
+.modal-container {
+    display: none;
+    position: absolute;
+    top: 40px;
+    right: 0;
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    z-index: 1;
+}
+
+.modal-content {
+    padding: 10px;
+}
+
+.akeb {
+    display: block;
+    padding: 8px;
+    text-decoration: none;
+    color: #333;
+}
+
+.akeb:hover, .akebd:hover {
+    background: #1591fd23;
+    border-radius: 10px;
+}
+
+.akebd{
+    color: red; background: none;
+    border: none;
+    padding: 10px;
+    margin: 0;
+    font-size: inherit;
+    font-family: inherit;
+    cursor: pointer;
+    outline: none;
+}
+
+
+
+.container {
+    max-width: 1200px;
+    width: 100%;
+    overflow: auto;
+}
+
+.top-content {
+    display: flex;
+    justify-content: space-between;
+}
+
+.top-content img {
+    width: 45px;
+    height: 45px;
+    border-radius: 100px;
+}
+
+.top-content .right {
+    display: flex;
+    align-items: center;
+}
+
+.top-content .right h3 {
+    font-size: 18px;
+    margin-top: 8px;
+    margin-right: 10px;
+}
+
+.viewed-project .vimg {
+    width: 100%;
+    min-height: 300px;
+    max-height: 300px;
+    object-fit: cover;
+    border-radius: 30px;
+}
+
+.viewed-project .vdesc {
+    margin: 20px 0;
+    font-size: 17px;
+}
+
+.i-btn {
+    display: inline-block;
+    display: flex;
+    justify-content: center;
+}
+
+.invest-btn {
+    text-decoration: none;
+    background-color: #006BB9;
+    color: #fff;
+    padding: 10px 40px;
+    border-radius: 30px;
+    border: none;
+    margin-bottom: 40px;
+}
+/* The Modal (background) */
+.modalBlock {
+    display: none; 
+    position: absolute; /* Change from fixed to absolute */
+    z-index: 1; 
+    padding-top: 50px; /* LOCATION NG BOX */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%; /* Set height to 100% */
+    overflow: auto; /* Change from scroll to auto */
+    background-color: rgb(0, 0, 0); 
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modalBlock::-webkit-scrollbar {
+    display: none;
+}
+
+.modal-edit {
+    position: relative;
+    background-color: #fefefe;
+    margin: auto;
+    bottom: 10px;
+    padding: 30px 35px;
+    border: 1px solid #888;
+    border-radius: 20px;
+    width: 50%;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    -webkit-animation-name: animatetop;
+    -webkit-animation-duration: 0.4s;
+    animation-name: animatetop;
+    animation-duration: 0.4s;
+}
+.modal-edit::-webkit-scrollbar {
+    width: 12px !important; 
+}
+
+.modal-edit::-webkit-scrollbar-thumb {
+    background-color: #006cb94e !important; 
+    border-radius: 6px !important;
+}
+
+.modal-edit::-webkit-scrollbar-track {
+    background-color: #006cb929 !important;
+}
+
+
+@-webkit-keyframes animatetop {
+    from {bottom:-300px; opacity:0}
+    to {bottom:10px; opacity:1}
+}
+
+@keyframes animatetop {
+    from {bottom:-300px; opacity:0}
+    to {bottom:10px; opacity:1}
+}  
+
+/* The Close Button */
+.closeEditM, .closeViewM {
+    color: #333;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.closeEditM:hover, .closeViewM:hover
+.closeEditM:focus, .closeViewM:focus  {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer !important;
+}
+
+.editForm .top {
+    display: inline-block;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.editForm .top h3 {
+    font-weight: bold;
+}
+
+.editForm p {
+    margin: 0;
+    padding: 0;
+    margin: 5px 0;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.editForm label {
+    font-size: 14px;
+    margin-left: 8px;
+}
+
+input[type="text"],
+textarea,
+input[type="file"] {
+    width: 100%;
+    margin: 8px 0;
+    box-sizing: border-box;
+    background-color: rgba(255, 255, 255, 0);
+    border: 1px solid var(--pblue-color);
+    font-family: inherit;
+    font-size: 15px;
+    padding: 10px;
+    border-radius: 8px;
+    transition: all 0.375s;
+    resize: none;
+}
+
+
+.editForm input[type=submit] {
+    cursor: pointer;
+    width: 100%;
+    padding: 10px 16px;
+    border-radius: 1.25rem;
+    background: var(--pblue-color);
+    color: #f9f9f9;
+    border: 0;
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 600;
+    text-align: center;
+    letter-spacing: 2px;
+    transition: all 0.375s;
+    margin-top: 15px;
+}
+
+.editForm input[type=submit]:hover {
+    background: var(--bhov-color);
+}
+
+
+
+
+

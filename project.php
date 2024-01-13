@@ -382,26 +382,19 @@ if (isset($_POST['submitBtnPitching'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>
-        <?php echo $hasCompany && !empty($companyName) ? $companyName . " - Launchpad" : 'Create Company - Launchpad'; ?>
+        Project - Launchpad
     </title>
-    <link rel="icon" href="/launchpad/images/favicon.ico" id="favicon">
+    <link rel="icon" href="images/favicon.svg">
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 
-   
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
     <link rel="stylesheet" href="css/company.css">
-    <link rel="stylesheet" href="css/timeline.css"> 
+    <link rel="stylesheet" href="css/timeline.css">
     <link rel="stylesheet" href="css/navbar.css">
-    <script>
-        function changeFavicon(url) {
-            const favicon = document.getElementById('favicon');
-            favicon.href = url;
-        }
-        <?php if ($hasCompany && !empty($companyLogo)): ?>
-            const companyLogoUrl = "/launchpad/<?php echo $companyLogo; ?>";
-            changeFavicon(companyLogoUrl);
-        <?php endif; ?>
-    </script>
+
+
 
     <style>
         body {
@@ -452,7 +445,7 @@ if (isset($_POST['submitBtnPitching'])) {
             font-size: 15px;
             cursor: pointer;
             font-weight: 700;
-            position: relative;
+            position: relative; /*originally RELATIVE*/
         }
 
         #progress-content-section {
@@ -556,6 +549,7 @@ if (isset($_POST['submitBtnPitching'])) {
             font-size: 25px !important;
             margin: 0;
         }
+
         .projectOverviewDirection,
         .projectOverviewDirection2 {
             text-align: left;
@@ -657,27 +651,51 @@ if (isset($_POST['submitBtnPitching'])) {
         }
 
         .content {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
 
-    .projectMenu {
-        display: flex;
-        align-items: center;
-    }
+        .projectMenu {
+            display: flex;
+            align-items: center;
+        }
 
-    .projectMenu a {
-        margin: 0 20px; 
-        text-decoration: none;
-        color: #006BB9;
-    font-size: 13px !important;
-    }
+        .projectMenu a {
+            margin: 0 20px;
+            text-decoration: none;
+            color: #006BB9;
+            font-size: 13px !important;
+        }
 
-.deleteProjectBTN{
-    color: #d93e3e !important;
-}
 
+        .deleteProjectBTN:hover,  .editProjectBTN:hover {
+            background: #1591fd23;
+            border-radius: 10px;
+        }
+        .editProjectBTN{
+            color: #006BB9;
+            background: none;
+            border: none;
+            padding: 10px;
+            margin-right: 10px !important;
+            font-size: 13px;
+            font-family: inherit;
+            cursor: pointer;
+            outline: none;
+        }
+
+        .deleteProjectBTN {
+            color: #cc0000;
+            background: none;
+            border: none;
+            padding: 10px;
+            margin: 0;
+            font-size: 13px;
+            font-family: inherit;
+            cursor: pointer;
+            outline: none;
+        }
     </style>
 </head>
 
@@ -712,7 +730,7 @@ if (isset($_POST['submitBtnPitching'])) {
                         <span>Invitations</span>
                     </span>
                 </button>
-            </a>            <a href="investment.php">
+            </a> <a href="investment.php">
                 <button>
                     <span>
                         <i><img src="\launchpad\images\iconinvestment.png" alt="home-logo" class="logo-ic"></i>
@@ -750,14 +768,15 @@ if (isset($_POST['submitBtnPitching'])) {
                                         <?php endif; ?>
                                     </div>
                                     <span class="create-company-text">
-                                        <?php echo $row['Company_name']; $companyName=$row['Company_name'];?>
+                                        <?php echo $row['Company_name'];
+                                        $companyName = $row['Company_name']; ?>
                                     </span>
                                 </span>
                             </button>
                         </a>
                     <?php endforeach; ?>
                 <?php endif; ?>
-
+                <br><br>
                 <!-- <p class="divider-company">COMPANIES YOU'VE JOINED</p>
                 <a href="#">
                     <button>
@@ -774,7 +793,7 @@ if (isset($_POST['submitBtnPitching'])) {
                 <a href="profile.php" style="position: fixed; bottom: 0; background-color: white;">
                     <button>
                         <span>
-                            <div class="avatar2" id="initialsAvatar6"></div>
+                            <div class="avatar2" id="initialsAvatar9"></div>
                             <span>Profile</span>
                         </span>
                     </button>
@@ -784,7 +803,7 @@ if (isset($_POST['submitBtnPitching'])) {
 
 
     </aside>
-    
+
     <?php
     $email = $_SESSION['email'];
 
@@ -803,19 +822,11 @@ if (isset($_POST['submitBtnPitching'])) {
         }
     }
     ?>
-
-
-    <div class="content">
-    <div class="projectMenu">
-    <a href="#"> <i class="fas fa-edit"></i> Edit Project Name</a>
-    <a href="#"><i class="fas fa-users"></i> See Members</a>
-    <a href="#" class="deleteProjectBTN"> <i class="fas fa-trash-alt"></i> Delete Project</a>
-</div>
-   
-        <?php
+     <?php
         if (isset($_GET['project_id'])) {
             //PROJECTID
             $project_id = $_GET['project_id'];
+            $_SESSION['projecid'] = $project_id;
             // echo "<h1>".$project_id."</h1>";
         
             $selectProjectInfo = mysqli_query($conn, "SELECT * FROM project WHERE Project_ID = $project_id");
@@ -826,23 +837,168 @@ if (isset($_POST['submitBtnPitching'])) {
             }
 
             ?>
-            <!-- echo the company id here -->
-            <div style="text-decoration: none; display: flex; align-items: center; justify-content: space-between; width: 90%; padding: 30px; margin: 15px; height: 80px;">
-            
-    <div style="text-align: left; position:fixed; margin: -50px !important" >
-        <span style="font-size: medium;">
-            <a href="company_view.php?Company_id=<?php echo $_SESSION['copid']; ?>"
-                style="text-decoration:none; color:#006BB9;"title="Back"><i class="fas fa-angle-left" style="font-size: 40px;"></i>
+    <?php
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        if (isset($_POST['deleteProject'])) {
+            echo "
+            <script>
+                Swal.fire({
+                    title: 'Are you sure to delete this project?',
+                    text: 'Deleting the project cannot be undone.',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Yes, delete it!',
+                    customClass: {
+                        popup: 'popupSwal',
+                    }
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            type: 'POST',
+                            url: 'deleteProject.php',
+                            data: { projecid: " . $_SESSION['projecid'] . " },
+                            success: function(response) {
+                                Swal.fire({
+                                    title: 'Project deleted successfully!',
+                                    text: '',
+                                    icon: 'success',
+                                    showConfirmButton: false,
+                                    timer: 2000,
+                                }).then(function () {
+                                    window.location.href = 'company_view.php?Company_id=" . $_SESSION['copid']. "';
+                                });
+                            }
+                        });
+                    }
+                });
+            </script>
+            ";
+        }else  if (isset($_POST['editProject'])) {
+            $newProjectName = mysqli_real_escape_string($conn, $_POST["project_name"]);
+            $newProjectDescription = mysqli_real_escape_string($conn, $_POST["project_description"]);
+            $selectedProjectID = mysqli_real_escape_string($conn, $_SESSION['projecid']);
 
-            </a>
-        </span>
-    </div>
-    <div style="text-align: center; flex-grow: 1;">
-        <h1 style="margin: 0; text-decoration: none; line-height: normal; font-family: Arial, Helvetica, sans-serif; font-style: normal; text-transform: none; letter-spacing: normal;">
-            <?php echo $project_name ?>
-        </h1>
-    </div>
-</div>
+            $updateQuery = "UPDATE project SET 
+                    Project_title='$newProjectName',
+                    Project_description='$newProjectDescription'
+                    WHERE Project_id='$selectedProjectID'";
+
+            if (mysqli_query($conn, $updateQuery)) {
+                echo "<script>
+                    Swal.fire({
+                        title: 'Changes saved successfully!',
+                        text: '',
+                        icon: 'success',
+                        showConfirmButton: false,
+                        timer: 3000, 
+                    }).then(function() {
+                        window.location.href = 'project.php?project_id=" . $_SESSION['projecid'] . "';
+                    });
+                </script>";
+            } else {
+                echo '<script type="text/javascript">';
+                echo 'swal("Error!", "Error updating record: ' . mysqli_error($conn) . '", "error");';
+                echo '</script>';
+            }
+        }
+    }
+?>
+
+
+
+    <div class="content">
+        <div class="projectMenu">
+
+            
+                <button id="viewComp" class="editProjectBTN"><i class="fas fa-users"></i> Project Team</button>
+         
+
+
+                <button id="editComp" class="editProjectBTN"><i class="fas fa-info-circle" title="Information"></i> Project Description</button>
+            
+
+
+            <form action="" method="post">
+                <input type="hidden" name="deleteProject">
+                <button type="submit" class="deleteProjectBTN"><i class="fas fa-trash-alt"></i> Delete Project</button>
+            </form>
+
+        </div>
+
+
+
+
+
+
+
+        <div id="editModal" class="modalBlock">
+            <div class="modal-edit">
+                <form class="editForm" action="" method="post" enctype="multipart/form-data">
+                <input type="hidden" name="editProject">
+                    <div class="editTop" style="display: flex; justify-content: space-between;">
+                        <h3>
+                            <?php echo $project_name ?>'s Description
+                        </h3>
+                        <span class="closeEditM" style="cursor: pointer; color: #006BB9;">&times;</span>
+                    </div>
+                        <p id="editP" style="color: #006BB9; cursor: pointer;"><i class="fas fa-edit"></i> Edit</p><br>
+                    <?php
+                   $projectDesc = mysqli_query($conn, "SELECT * FROM project WHERE project_id='{$_SESSION['projecid']}'");
+                    if (mysqli_num_rows($projectDesc) > 0) {
+                        $row = mysqli_fetch_assoc($projectDesc);
+                        ?>
+                        <p>Project Name:</p>
+                        <input type="text" id="project_name" name="project_name" value="<?php echo $project_name ?>"
+                            required readonly>
+                        <p>Project Description:</p>
+                        <textarea id="project_description" name="project_description" rows="8"
+                            required readonly class="prodesc"><?php echo $row['Project_Description']; ?></textarea>
+                        
+                    <?php } ?>
+                    
+                    <input type="submit" value="Save Changes" name="submit" style="visibility: hidden;"><br>
+                    <p id="cancelBTN" style="text-align: center; cursor: pointer; visibility: hidden;" >Cancel</p>
+                    
+                    <br>
+                </form>
+            </div>
+        </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+       
+            <!-- echo the company id here -->
+            <div
+                style="text-decoration: none; display: flex; align-items: center; justify-content: space-between; width: 90%; padding: 30px; margin: 15px; height: 80px;">
+
+                <div style="text-align: left; position:fixed; margin: -50px !important">
+                    <span style="font-size: medium;">
+                        <a href="company_view.php?Company_id=<?php echo $_SESSION['copid']; ?>"
+                            style="text-decoration:none; color:#006BB9;" title="Back"><i class="fas fa-angle-left"
+                                style="font-size: 40px;"></i>
+
+                        </a>
+                    </span>
+                </div>
+                <div style="text-align: center; flex-grow: 1;">
+                    <h1
+                        style="margin: 0; text-decoration: none; line-height: normal; font-family: Arial, Helvetica, sans-serif; font-style: normal; text-transform: none; letter-spacing: normal;">
+                        <?php echo $project_name ?>
+                    </h1>
+                </div>
+            </div>
 
             <div class="process-wrapper">
                 <div id="progress-bar-container">
@@ -1336,6 +1492,51 @@ if (isset($_POST['submitBtnPitching'])) {
             label.textContent = `Selected file: ${fileName}`;
         }
     </script>
+    <script>
+        var modal = document.getElementById("editModal");
+        var btn = document.getElementById("editComp");
+        var span = document.getElementsByClassName("closeEditM")[0];
+        var cancell =document.getElementById("cancelBTN");
+ 
+        btn.onclick = function () {
+            modal.style.display = "block";
+            document.body.style.overflow = "hidden";
+        }
+        span.onclick = function () {
+            modal.style.display = "none";
+            document.body.style.overflow = "visible";
+        }
+        cancell.onclick =function(){
+            modal.style.display = "none";
+            document.body.style.overflow = "visible";
+            location.reload();
+        }
+
+    </script>
+    <script>
+    document.getElementById('editP').addEventListener('click', function() {
+        document.querySelector('input[name="submit"]').style.visibility = 'visible';
+        document.querySelector('p[style*="visibility: hidden;"]').style.visibility = 'visible';
+        document.getElementById('project_name').removeAttribute('readonly');
+        document.getElementById('project_description').removeAttribute('readonly');
+    });
+</script>
+<script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const firstName = "<?php echo $fname ?>"; 
+            const lastName = "<?php echo $lname ?>";
+            const initials = getInitials(firstName, lastName);
+            document.getElementById("initialsAvatar9").innerText = initials;
+        });
+
+        function getInitials(firstName, lastName) {
+            return (
+                (firstName ? firstName[0].toUpperCase() : "") +
+                (lastName ? lastName[0].toUpperCase() : "")
+            );
+        }
+    </script>
+
 </body>
 
 </html>

@@ -24,17 +24,17 @@ $companyName = "";
 $companyLogo = "";
 
 if ($hasCompany) {
-    $row = mysqli_fetch_assoc($resultCompany); 
+    $row = mysqli_fetch_assoc($resultCompany);
     $companyID = $row["Company_ID"];
     $companyName = $row["Company_name"];
-    $companyLogo = $row["Company_logo"]; 
+    $companyLogo = $row["Company_logo"];
 }
 
 
 require __DIR__ . '/vendor/autoload.php';
 use Orhanerday\OpenAi\OpenAi;
 
-$open_ai_key = "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";
+$open_ai_key = "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";
 $open_ai = new OpenAi($open_ai_key);
 $projectTitle;
 $response;
@@ -62,11 +62,13 @@ if (isset($_POST['submitG'])) {
 
 
     $complete = $open_ai->completion([
-        'model' => 'text-davinci-003',
+        'model' => 'gpt-3.5-turbo-instruct',
         'prompt' => <<<EOT
+          If you receive the same prompt or idea over and over again, provide the same response you gave earlier, especially the percentage.
+
         The only response you will always display is the PERCENTAGE ONLY, then the explanation. NOTHING ELSE.
     If the project idea is similar to other applications or systems, frankly say it in the explanation and give low percentage.
-    If the same prompt provide like earlier, do not change your response especially the percentage.
+
     Scan and assess how unique the startup project idea is among all the existing systems, applications, or startup projects on the web.
     Do not be biased, be frank. Be honest whether it is common or unique.
     If the project idea is similar to other applications or systems, frankly say it in the explanation that it is common and give low percentage.
@@ -87,7 +89,7 @@ if (isset($_POST['submitG'])) {
     Startup Project Description: $projectDesc
     EOT,
         'temperature' => 0.9,
-        'max_tokens' => 150,
+        'max_tokens' => 999,
         'frequency_penalty' => 0,
         'presence_penalty' => 0.6,
     ]);
@@ -116,65 +118,100 @@ if (isset($_POST['submitG'])) {
             switch (true) {
                 case ($number >= 0 && $number <= 25.99):
                     $category = "Common Concept";
-                    break;
-                case ($number >= 26 && $number <= 50.99):
-                    $category = "Familiar Idea";
-                    break;
-                case ($number >= 51 && $number <= 75.99):
-                    $category = "Average Approach";
                     $completee = $open_ai->completion([
-                        'model' => 'text-davinci-003',
+                        'model' => 'gpt-3.5-turbo-instruct',
                         'prompt' => <<<EOT
-                        Recommend 10 much better and proper titles for $projectTitle
+                        List down 10 existing concepts/systems, with website links, that are similar to the idea of $projectTitle : $projectDesc
                         EOT,
                         'temperature' => 0.9,
-                        'max_tokens' => 150,
+                        'max_tokens' => 999,
                         'frequency_penalty' => 0,
                         'presence_penalty' => 0.6,
                     ]);
                     $responseTitles = json_decode($completee, true);
-                    $responseTitles = $responseTitles["choices"][0]["text"];
+                    if (isset($responseTitles["choices"], $responseTitles["choices"][0], $responseTitles["choices"][0]["text"])) {
+                        $responseTitles = $responseTitles["choices"][0]["text"];
+                    }
+                    $resultTitles = "Some Similar Concepts/Systems to Your Startup Idea";
+                    break;
+                case ($number >= 26 && $number <= 50.99):
+                    $category = "Familiar Idea";
+                    $completee = $open_ai->completion([
+                        'model' => 'gpt-3.5-turbo-instruct',
+                        'prompt' => <<<EOT
+                        List down 10 existing concepts/systems, with website links, that are similar to the idea of $projectTitle : $projectDesc
+                        EOT,
+                        'temperature' => 0.9,
+                        'max_tokens' => 999,
+                        'frequency_penalty' => 0,
+                        'presence_penalty' => 0.6,
+                    ]);
+                    $responseTitles = json_decode($completee, true);
+                    if (isset($responseTitles["choices"], $responseTitles["choices"][0], $responseTitles["choices"][0]["text"])) {
+                        $responseTitles = $responseTitles["choices"][0]["text"];
+                    }
+                    $resultTitles = "Some Similar Concepts/Systems to Your Startup Idea";
+                    break;
+                case ($number >= 51 && $number <= 75.99):
+                    $category = "Average Approach";
+                    $completee = $open_ai->completion([
+                        'model' => 'gpt-3.5-turbo-instruct',
+                        'prompt' => <<<EOT
+                        Recommend 10 much better and proper titles for $projectTitle
+                        EOT,
+                        'temperature' => 0.9,
+                        'max_tokens' => 999,
+                        'frequency_penalty' => 0,
+                        'presence_penalty' => 0.6,
+                    ]);
+                    $responseTitles = json_decode($completee, true);
+                    if (isset($responseTitles["choices"], $responseTitles["choices"][0], $responseTitles["choices"][0]["text"])) {
+                        $responseTitles = $responseTitles["choices"][0]["text"];
+                    }
                     $resultTitles = "Suggested Project Titles for Your Startup Project Idea";
                     break;
                 case ($number >= 76 && $number <= 89.99):
                     $category = "Innovative Solution";
                     $completee = $open_ai->completion([
-                        'model' => 'text-davinci-003',
+                        'model' => 'gpt-3.5-turbo-instruct',
                         'prompt' => <<<EOT
-                        Recommend 10 much better and proper titles for $projectTitle
+                        List down 10 much better and proper titles for $projectTitle
                         EOT,
                         'temperature' => 0.9,
-                        'max_tokens' => 150,
+                        'max_tokens' => 999,
                         'frequency_penalty' => 0,
                         'presence_penalty' => 0.6,
                     ]);
                     $responseTitles = json_decode($completee, true);
-                    $responseTitles = $responseTitles["choices"][0]["text"];
+                    if (isset($responseTitles["choices"], $responseTitles["choices"][0], $responseTitles["choices"][0]["text"])) {
+                        $responseTitles = $responseTitles["choices"][0]["text"];
+                    }
                     $resultTitles = "Suggested Project Titles for Your Startup Project Idea";
                     break;
                 case ($number >= 90 && $number <= 100):
                     $category = "Trailblazing Idea!";
                     $completee = $open_ai->completion([
-                        'model' => 'text-davinci-003',
+                        'model' => 'gpt-3.5-turbo-instruct',
                         'prompt' => <<<EOT
-                        Recommend 10 much better and proper startup project titles for $projectTitle
+                        List down 10 much better and proper startup project titles for $projectTitle
                         EOT,
                         'temperature' => 0.9,
-                        'max_tokens' => 150,
+                        'max_tokens' => 999,
                         'frequency_penalty' => 0,
                         'presence_penalty' => 0.6,
                     ]);
                     $responseTitles = json_decode($completee, true);
-                    $responseTitles = $responseTitles["choices"][0]["text"];
+                    if (isset($responseTitles["choices"], $responseTitles["choices"][0], $responseTitles["choices"][0]["text"])) {
+                        $responseTitles = $responseTitles["choices"][0]["text"];
+                    }
                     $resultTitles = "Suggested Project Titles for Your Startup Project Idea";
                     break;
                 default:
-                    $category = "Unknown Category"; 
+                    $category = "Unknown Category";
             }
 
 
         } else {
-            
             $percentage = "N/A";
             $category = "For better assistance, please provide more context. Thank you!";
             $response = "The title and description of this startup project are too vague and do not provide enough context. More detailed information is required to provide an accurate assessment.";
@@ -183,7 +220,8 @@ if (isset($_POST['submitG'])) {
 
 
     } else {
-        $category = "For better assistance, please provide more context. Thank you!";
+
+        $category = "For better assistance, please provide more context. Thank you!!";
         $response = "The title and description of this startup project are too vague and do not provide enough context. More detailed information is required to provide an accurate assessment.";
     }
 
@@ -253,12 +291,37 @@ if (isset($_POST['submitG'])) {
             font-family: inherit;
             font-size: 15px;
             padding: 0 16px;
-            border-radius: 1.25rem;
+            border-radius: 20px;
             transition: all 0.375s;
             margin: 10px;
         }
+        .inputDesc{
+            width: 100%;
+            background-color: #ffffff00;
+            border: 1px solid var(--pblue-color);
+            font-family: inherit;
+            font-size: 15px;
+            padding: 0 16px;
+            border-radius: 20px;
+            transition: all 0.375s;
+            margin: 10px;
+            resize: none;
+        }
 
-        .inputTitle:hover {
+        .inputDesc::-webkit-scrollbar {
+            width: 12px !important;
+        }
+
+        .inputDesc::-webkit-scrollbar-thumb {
+            background-color: #006cb94e !important;
+            border-radius: 6px !important;
+        }
+
+        .inputDesc::-webkit-scrollbar-track {
+            background-color: #006cb929 !important;
+        }
+
+        .inputTitle:hover, .inputDesc:hover {
             border: 1px solid var(--pyellow-color);
         }
 
@@ -280,6 +343,10 @@ if (isset($_POST['submitG'])) {
             transition: all 0.375s;
             margin-top: 5px;
         }
+        .generatebtn:hover{
+            
+            background: #093a5d;
+        }
 
 
         .output-text {
@@ -291,8 +358,10 @@ if (isset($_POST['submitG'])) {
             justify-content: center;
             font-size: large;
             font-weight: 700;
-            background-color:  <?php if (isset($categBG))
-                    echo $categBG; ?>;
+            background-color:
+                <?php if (isset($categBG))
+                    echo $categBG; ?>
+            ;
             color: white;
             border-radius: 20px;
             padding: 20px;
@@ -313,7 +382,7 @@ if (isset($_POST['submitG'])) {
             white-space: break-spaces;
         }
 
-        .output-titles > span {
+        .output-titles>span {
             text-align: center;
             font-weight: 600;
             font-size: 20px;
@@ -371,20 +440,22 @@ if (isset($_POST['submitG'])) {
                 </button>
             </a>
             <p class="divider-company">YOUR COMPANY<a href="create-company.php" style="text-decoration: none;">
-                   
-                                <img src="\launchpad\images\join-company-icon.png" alt="Join Company Icon" width="15px" height="15px" style="margin-left: 70px;">
-                            
+
+                    <img src="\launchpad\images\join-company-icon.png" alt="Join Company Icon" width="15px"
+                        height="15px" style="margin-left: 70px;">
+
                 </a></p>
-                         
-                
-                <?php if ($hasCompany): ?>
+
+
+            <?php if ($hasCompany): ?>
                 <?php foreach ($resultCompany as $row): ?>
                     <a href="company_view.php?Company_id=<?php echo $row['Company_ID']; ?>">
                         <button>
                             <span class="<?php echo 'btn-company-created'; ?>">
                                 <div class="circle-avatar">
                                     <?php if (!empty($row['Company_logo'])): ?>
-                                        <img src="\launchpad\<?php echo $row['Company_logo']; ?>" alt="Company Logo" class="img-company">
+                                        <img src="\launchpad\<?php echo $row['Company_logo']; ?>" alt="Company Logo"
+                                            class="img-company">
                                     <?php endif; ?>
                                 </div>
                                 <span class="create-company-text">
@@ -394,7 +465,7 @@ if (isset($_POST['submitG'])) {
                         </button>
                     </a>
                 <?php endforeach; ?>
-                <?php endif; ?>
+            <?php endif; ?>
 
             <!-- <p class="divider-company">COMPANIES YOU'VE JOINED</p>
             <a href="#">
@@ -410,10 +481,10 @@ if (isset($_POST['submitG'])) {
                 </button>
             </a> -->
             <br><br>
-            <a href="profile.php"style="position: fixed; bottom: 0; background-color: white;">
+            <a href="profile.php" style="position: fixed; bottom: 0; background-color: white;">
                 <button>
                     <span>
-                    <div class="avatar2" id="initialsAvatar3"></div>
+                        <div class="avatar2" id="initialsAvatar3"></div>
                         <span>Profile</span>
                     </span>
                 </button>
@@ -424,25 +495,25 @@ if (isset($_POST['submitG'])) {
 
     </aside>
 
-    <?php 
-        $email = $_SESSION['email'];
+    <?php
+    $email = $_SESSION['email'];
 
-        $select_user_info = "SELECT * FROM student_registration WHERE Student_email='$email'";
-        $result_user_info = mysqli_query($conn, $select_user_info);
-        if ($result_user_info) {
-            if (mysqli_num_rows($result_user_info) > 0) {
-                $row = mysqli_fetch_assoc($result_user_info);
-                $stud_id = $row['Student_ID'];
-                $fname = $row['Student_fname'];
-                $lname = $row['Student_lname'];
-                $course = $row['Course'];
-                $year = $row['Year'];
-                $block = $row['Block'];
-                $contactNo = $row['Student_contactno'];
-            }
+    $select_user_info = "SELECT * FROM student_registration WHERE Student_email='$email'";
+    $result_user_info = mysqli_query($conn, $select_user_info);
+    if ($result_user_info) {
+        if (mysqli_num_rows($result_user_info) > 0) {
+            $row = mysqli_fetch_assoc($result_user_info);
+            $stud_id = $row['Student_ID'];
+            $fname = $row['Student_fname'];
+            $lname = $row['Student_lname'];
+            $course = $row['Course'];
+            $year = $row['Year'];
+            $block = $row['Block'];
+            $contactNo = $row['Student_contactno'];
         }
-    ?> 
-    <div class="content">
+    }
+    ?>
+    <div class="content" style="height: auto">
         <div>
             <h1>Startup Project Idea Checker</h1>
             <p>This will assess your project idea's uniqueness and help you make the best out of it.</p><br>
@@ -458,8 +529,9 @@ if (isset($_POST['submitG'])) {
                 <div>
 
                     <label for="projectDesc" style="margin-left: 20px">Project Description:</label><br>
-                    <textarea class="inputTitle" name="projectDesc" id="projectDesc" cols="30" rows="50"
-                        style="padding: 10px;" placeholder="Enter your project title's description" required><?php if (isset($projectDesc))
+                    <textarea class="inputDesc" name="projectDesc" id="projectDesc" cols="30" rows="50"
+                        style="height: 240px; padding: 20px; resize: none;"
+                        placeholder="Enter your project title's description" required><?php if (isset($projectDesc))
                             echo $projectDesc; ?></textarea>
 
                 </div><br><br>
@@ -490,7 +562,7 @@ if (isset($_POST['submitG'])) {
                         echo $resultTitles; ?>
                 </span><br>
                 <?php if (isset($responseTitles))
-                    echo $responseTitles; ?>
+                     echo $responseTitles; ?>
             </div>
         </div>
         <br><br>
@@ -515,9 +587,9 @@ if (isset($_POST['submitG'])) {
     </script> -->
     <script>
         // JavaScript to set the initials
-        document.addEventListener("DOMContentLoaded", function() {
-            const firstName = "<?php echo $fname?>"; // Replace with actual first name
-            const lastName = "<?php echo $lname?>"; // Replace with actual last name
+        document.addEventListener("DOMContentLoaded", function () {
+            const firstName = "<?php echo $fname ?>"; // Replace with actual first name
+            const lastName = "<?php echo $lname ?>"; // Replace with actual last name
 
             const initials = getInitials(firstName, lastName);
             document.getElementById("initialsAvatar3").innerText = initials;

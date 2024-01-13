@@ -130,7 +130,7 @@ $resultProjects = mysqli_query($conn, $projectQuery);
                         <span class="join-company-text">Join companies</span>
                     </span>
                 </button>
-                </a> -->
+                </a> --><br><br>
 <a href="#" class="active" style="position: fixed; bottom: 0; background-color: white;">
                 <button>
                     <span>

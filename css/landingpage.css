@@ -153,3 +153,17 @@ nav .left-btn  {
 .cards .card-link {
     text-decoration: none;
 }
+
+
+body::-webkit-scrollbar {
+    width: 12px !important; 
+}
+
+body::-webkit-scrollbar-thumb {
+    background-color: #ff9d0076 !important; 
+    border-radius: 6px !important;
+}
+
+body::-webkit-scrollbar-track {
+    background-color: #ff9d004c !important;
+}
