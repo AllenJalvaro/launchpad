@@ -8,6 +8,7 @@ if (empty($_SESSION["email"])) {
 
 $userEmail = $_SESSION["email"];
 $project_id = $_GET['project_id'];
+$_SESSION['projecid'] = $project_id;
 $checkCompanyQuery = "SELECT c.*, s.Student_ID 
                         FROM company_registration c
                         INNER JOIN student_registration s ON c.Student_ID = s.Student_ID
@@ -44,337 +45,7 @@ if ($selectedCompanyID) {
     }
 }
 
-$projectQuery = "SELECT * FROM project WHERE Company_ID = '$selectedCompanyID' ORDER BY Project_date DESC";
-$resultProjects = mysqli_query($conn, $projectQuery);
-
-
-//IDEATION BACKEND SUBMIT
-if (isset($_POST['submitBtn'])) {
-    // Count ideation phase
-    $count_ideation_phase_query = "SELECT COUNT(ideation_phase.IdeationID) AS Count 
-                                    FROM ideation_phase 
-                                    INNER JOIN project ON ideation_phase.Project_ID=project.Project_ID 
-                                    WHERE project.Project_ID=$project_id;";
-    $count_ideation_phase_result = mysqli_query($conn, $count_ideation_phase_query);
-
-    if (mysqli_num_rows($count_ideation_phase_result) > 0) {
-        $row = mysqli_fetch_assoc($count_ideation_phase_result);
-        $count = $row['Count'];
-
-        if ($count > 0) {
-            // Update existing project
-
-            $project_overview = $_POST['project_overview'];
-
-            // Logo upload
-            $logo = $_FILES['project_logo']['name'];
-            $logo_tmp = $_FILES['project_logo']['tmp_name'];
-            $logo_store = "images/" . $logo;
-
-            // Check if the file is an image
-            $logoFileType = strtolower(pathinfo($logo_store, PATHINFO_EXTENSION));
-            if (!empty($logo) && !in_array($logoFileType, array('jpg', 'jpeg', 'png', 'gif'))) {
-                echo "<script>alert('File must be an image');</script>";
-            } else {
-                if (!empty($logo)) {
-                    move_uploaded_file($logo_tmp, $logo_store);
-                }
-
-                // Model Canvas (PDF) upload
-                $model_canvas = $_FILES['model_canvas']['name'];
-                $model_canvas_tmp = $_FILES['model_canvas']['tmp_name'];
-                $model_canvas_store = "pdf/" . $model_canvas;
-
-                // Check if a file was uploaded for the model canvas
-                if (!empty($model_canvas)) {
-                    // Check if the file is a PDF
-                    $pdfFileType = strtolower(pathinfo($model_canvas_store, PATHINFO_EXTENSION));
-                    if ($pdfFileType != 'pdf') {
-                        echo "<script>alert('File must be a PDF');</script>";
-                    } else {
-                        // Check if the PDF file already exists
-                        if (file_exists($model_canvas_store)) {
-                            echo "<script>alert('A file with the same name already exists. Please choose a different file name for the PDF');</script>";
-                        } else {
-                            move_uploaded_file($model_canvas_tmp, $model_canvas_store);
-
-                            // Update data in the database
-                            $update_query = "UPDATE ideation_phase 
-                            SET 
-                               Project_logo = " . (!empty($logo) ? "'$logo_store'" : "Project_logo") . ",
-                               Project_Overview = '$project_overview',
-                               Project_Modelcanvas = '$model_canvas_store',
-                               Submission_date = NOW()
-                            WHERE 
-                               Project_ID = $project_id";
-
-                            $update_result = mysqli_query($conn, $update_query);
-
-                            if ($update_result) {
-                                echo "<script>alert('Your project have been submitted to the evaluator!');</script>";
-                            } else {
-                                echo "<script>alert('Error updating data in the database.');</script>";
-                            }
-                        }
-                    }
-                } else {
-                    // Update data in the database without changing the model canvas
-                    $update_query = "UPDATE ideation_phase 
-                    SET 
-                       Project_logo = " . (!empty($logo) ? "'$logo_store'" : "Project_logo") . ",
-                       Project_Overview = '$project_overview',
-                       Submission_date = NOW()
-                    WHERE 
-                       Project_ID = $project_id";
-
-                    $update_result = mysqli_query($conn, $update_query);
-
-                    if ($update_result) {
-                        echo "<script>alert('Your Project have been submitted to the evaluator!');</script>";
-                    } else {
-                        echo "<script>alert('Error updating data in the database.');</script>";
-                    }
-                }
-            }
-        } else {
-            // Insert new project
-
-            $project_overview = $_POST['project_overview'];
-
-            // Logo upload
-            $logo = $_FILES['project_logo']['name'];
-            $logo_tmp = $_FILES['project_logo']['tmp_name'];
-            $logo_store = "images/" . $logo;
-
-            // Check if the file is an image
-            $logoFileType = strtolower(pathinfo($logo_store, PATHINFO_EXTENSION));
-            if (!in_array($logoFileType, array('jpg', 'jpeg', 'png', 'gif'))) {
-                echo "<script>alert('File must be an image');</script>";
-            } else {
-                move_uploaded_file($logo_tmp, $logo_store);
-
-                // Model Canvas (PDF) upload
-                $model_canvas = $_FILES['model_canvas']['name'];
-                $model_canvas_tmp = $_FILES['model_canvas']['tmp_name'];
-                $model_canvas_store = "pdf/" . $model_canvas;
-
-                // Check if the file is a PDF
-                $pdfFileType = strtolower(pathinfo($model_canvas_store, PATHINFO_EXTENSION));
-                if ($pdfFileType != 'pdf') {
-                    echo "<script>alert('File must be a PDF');</script>";
-                } else {
-                    // Check if the PDF file already exists
-                    if (file_exists($model_canvas_store)) {
-                        echo "<script>alert('A file with the same name already exists. Please choose a different file name for the PDF');</script>";
-                    } else {
-                        move_uploaded_file($model_canvas_tmp, $model_canvas_store);
-
-                        // Insert data into the database
-                        $insert_query = "INSERT INTO ideation_phase 
-                                         VALUES ('', $project_id, '$logo_store', '$project_overview', '$model_canvas_store', NOW())";
-                        $insert_result = mysqli_query($conn, $insert_query);
-
-                        if ($insert_result) {
-                            echo "<script>alert('Your data have been submitted to the evaluator!');</script>";
-                        } else {
-                            echo "<script>alert('Error inserting data into the database.');</script>";
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-}
-
-//IDEATION BACKEND SAVED
-
-if (isset($_POST['btnSave'])) {
-
-    // Count ideation phase
-    $count_ideation_phase_query = "SELECT COUNT(ideation_phase.IdeationID) AS Count 
-                                    FROM ideation_phase 
-                                    INNER JOIN project ON ideation_phase.Project_ID=project.Project_ID 
-                                    WHERE project.Project_ID=$project_id;";
-    $count_ideation_phase_result = mysqli_query($conn, $count_ideation_phase_query);
-
-    if (mysqli_num_rows($count_ideation_phase_result) > 0) {
-        $row = mysqli_fetch_assoc($count_ideation_phase_result);
-        $count = $row['Count'];
-
-        if ($count > 0) {
-            // Update existing project
-
-            $project_overview = $_POST['project_overview'];
-
-            // Logo upload
-            $logo = $_FILES['project_logo']['name'];
-            $logo_tmp = $_FILES['project_logo']['tmp_name'];
-            $logo_store = "images/" . $logo;
-
-            // Check if the file is an image
-            $logoFileType = strtolower(pathinfo($logo_store, PATHINFO_EXTENSION));
-            if (!empty($logo) && !in_array($logoFileType, array('jpg', 'jpeg', 'png', 'gif'))) {
-                echo "<script>alert('File must be an image');</script>";
-            } else {
-                if (!empty($logo)) {
-                    move_uploaded_file($logo_tmp, $logo_store);
-                }
-
-                // Model Canvas (PDF) upload
-                $model_canvas = $_FILES['model_canvas']['name'];
-                $model_canvas_tmp = $_FILES['model_canvas']['tmp_name'];
-                $model_canvas_store = "pdf/" . $model_canvas;
-
-                // Check if a file was uploaded for the model canvas
-                if (!empty($model_canvas)) {
-                    // Check if the file is a PDF
-                    $pdfFileType = strtolower(pathinfo($model_canvas_store, PATHINFO_EXTENSION));
-                    if ($pdfFileType != 'pdf') {
-                        echo "<script>alert('File must be a PDF');</script>";
-                    } else {
-                        // Check if the PDF file already exists
-                        if (file_exists($model_canvas_store)) {
-                            echo "<script>alert('A file with the same name already exists. Please choose a different file name for the PDF');</script>";
-                        } else {
-                            move_uploaded_file($model_canvas_tmp, $model_canvas_store);
-
-                            // Update data in the database
-                            $update_query = "UPDATE ideation_phase 
-                            SET 
-                               Project_logo = " . (!empty($logo) ? "'$logo_store'" : "Project_logo") . ",
-                               Project_Overview = '$project_overview',
-                               Project_Modelcanvas = '$model_canvas_store',
-                               Submission_date = NOW()
-                            WHERE 
-                               Project_ID = $project_id";
-
-                            $update_result = mysqli_query($conn, $update_query);
-
-                            if ($update_result) {
-                                echo "<script>alert('Saved successfully!');</script>";
-                            } else {
-                                echo "<script>alert('Error updating data in the database.');</script>";
-                            }
-                        }
-                    }
-                } else {
-                    // Update data in the database without changing the model canvas
-                    $update_query = "UPDATE ideation_phase 
-                    SET 
-                       Project_logo = " . (!empty($logo) ? "'$logo_store'" : "Project_logo") . ",
-                       Project_Overview = '$project_overview',
-                       Submission_date = NOW()
-                    WHERE 
-                       Project_ID = $project_id";
-
-                    $update_result = mysqli_query($conn, $update_query);
-
-                    if ($update_result) {
-                        echo "<script>alert('Saved successfully!');</script>";
-                    } else {
-                        echo "<script>alert('Error updating data in the database.');</script>";
-                    }
-                }
-            }
-        } else {
-            // Insert new project
-
-            $project_overview = $_POST['project_overview'];
-
-            // Logo upload
-            $logo = $_FILES['project_logo']['name'];
-            $logo_tmp = $_FILES['project_logo']['tmp_name'];
-            $logo_store = "images/" . $logo;
-
-            // Check if the file is an image
-            $logoFileType = strtolower(pathinfo($logo_store, PATHINFO_EXTENSION));
-            if (!in_array($logoFileType, array('jpg', 'jpeg', 'png', 'gif'))) {
-                echo "<script>alert('File must be an image');</script>";
-            } else {
-                move_uploaded_file($logo_tmp, $logo_store);
-
-                // Model Canvas (PDF) upload
-                $model_canvas = $_FILES['model_canvas']['name'];
-                $model_canvas_tmp = $_FILES['model_canvas']['tmp_name'];
-                $model_canvas_store = "pdf/" . $model_canvas;
-
-                // Check if the file is a PDF
-                $pdfFileType = strtolower(pathinfo($model_canvas_store, PATHINFO_EXTENSION));
-                if ($pdfFileType != 'pdf') {
-                    echo "<script>alert('File must be a PDF');</script>";
-                } else {
-                    // Check if the PDF file already exists
-                    if (file_exists($model_canvas_store)) {
-                        echo "<script>alert('A file with the same name already exists. Please choose a different file name for the PDF');</script>";
-                    } else {
-                        move_uploaded_file($model_canvas_tmp, $model_canvas_store);
-
-                        // Insert data into the database
-                        $insert_query = "INSERT INTO ideation_phase 
-                                         VALUES ('', $project_id, '$logo_store', '$project_overview', '$model_canvas_store', NOW())";
-                        $insert_result = mysqli_query($conn, $insert_query);
-
-                        if ($insert_result) {
-                            echo "<script>alert('Data inserted successfully!');</script>";
-                        } else {
-                            echo "<script>alert('Error inserting data into the database.');</script>";
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
-if (isset($_POST['submitBtnPitching'])) {
-    $video_pitch_name = $_FILES['video_pitch']['name'];
-    $video_pitch_tmp_name = $_FILES['video_pitch']['tmp_name'];
-    $video_pitch_error = $_FILES['video_pitch']['error'];
-
-    $pitch_deck_name = $_FILES['pitch_deck']['name'];
-    $pitch_deck_tmp_name = $_FILES['pitch_deck']['tmp_name'];
-    $pitch_deck_error = $_FILES['pitch_deck']['error'];
-
-    // Handle Video Pitch
-    if ($video_pitch_error === 0) {
-        $video_pitch_ex = pathinfo($video_pitch_name, PATHINFO_EXTENSION);
-        $video_pitch_ex_lc = strtolower($video_pitch_ex);
-        $allowed_video_exs = array("mp4", "webm", "avi", "flv");
-
-        if (in_array($video_pitch_ex_lc, $allowed_video_exs)) {
-            $new_video_pitch_name = uniqid("video-", true) . '.' . $video_pitch_ex_lc;
-            $video_pitch_upload_path = 'videos/' . $new_video_pitch_name;
-            move_uploaded_file($video_pitch_tmp_name, $video_pitch_upload_path);
-
-            // Handle Pitch Deck
-            if ($pitch_deck_error === 0) {
-                $pitch_deck_ex = pathinfo($pitch_deck_name, PATHINFO_EXTENSION);
-                $pitch_deck_ex_lc = strtolower($pitch_deck_ex);
-                $allowed_pitch_deck_exs = array("pdf");
-
-                if (in_array($pitch_deck_ex_lc, $allowed_pitch_deck_exs)) {
-                    $new_pitch_deck_name = uniqid("pitch_deck-", true) . '.' . $pitch_deck_ex_lc;
-                    $pitch_deck_upload_path = 'pdf/' . $new_pitch_deck_name;
-                    move_uploaded_file($pitch_deck_tmp_name, $pitch_deck_upload_path);
-
-                    // Insert both paths into the database
-                    $sql = "INSERT INTO pitching_phase VALUES ('', $project_id, '$new_video_pitch_name', '$new_pitch_deck_name', NOW())";
-                    mysqli_query($conn, $sql);
-
-                } else {
-                    echo "<script>alert('You can\'t upload files of this type for Pitch Deck');</script>";
-                }
-            }
-        } else {
-            echo "<script>alert('You can\'t upload files of this type for Video Pitch');</script>";
-        }
-    }
-
-
-}
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -445,7 +116,8 @@ if (isset($_POST['submitBtnPitching'])) {
             font-size: 15px;
             cursor: pointer;
             font-weight: 700;
-            position: relative; /*originally RELATIVE*/
+            position: relative;
+            /*originally RELATIVE*/
         }
 
         #progress-content-section {
@@ -511,29 +183,31 @@ if (isset($_POST['submitBtnPitching'])) {
             background-color: #006cb956;
         }
 
-        .img-container {
-            width: 250px;
-            /* Adjust the width to your preference */
-            height: 250px;
-            /* Adjust the height to your preference */
-            overflow: hidden;
-            /* Ensure the image doesn't overflow the container */
-            position: relative;
-            /* Add this if you want to center the image inside the box */
-        }
+        /* .img-container { */
+        /* width: 250px; */
+        /* Adjust the width to your preference */
+        /* height: 250px; */
+        /* Adjust the height to your preference */
+        /* overflow: hidden; */
+        /* Ensure the image doesn't overflow the container */
+        /* position: relative; */
+        /* Add this if you want to center the image inside the box */
+        /* } */
 
-        .img-container img {
-            width: 100%;
-            /* Make the image fill the container */
-            height: auto;
-            /* Maintain the image's aspect ratio */
-            display: block;
-            /* Remove extra space below the image */
-        }
+        /* .img-container img { */
+        /* width: 100%; */
+        /* Make the image fill the container */
+        /* height: auto; */
+        /* Maintain the image's aspect ratio */
+        /* display: block; */
+        /* Remove extra space below the image */
+        /* } */
 
         embed {
-            border: 2px solid black;
-            margin-top: 30px;
+            border: 1px solid gray;
+            height: 560px;
+            width: 100%;
+            border-radius: 20px;
         }
 
         .phaseSection {
@@ -561,6 +235,7 @@ if (isset($_POST['submitBtnPitching'])) {
             margin-top: 30px;
             resize: none;
             border-radius: 10px;
+            padding: 20px !important;
         }
 
         .feedbackTitle {
@@ -605,18 +280,30 @@ if (isset($_POST['submitBtnPitching'])) {
             text-align: left;
         }
 
+        .projectOverview-textarea::-webkit-scrollbar {
+            width: 12px;
+        }
+
+        .projectOverview-textarea::-webkit-scrollbar-thumb {
+            background-color: #006cb94e;
+            border-radius: 6px;
+        }
+
+        .projectOverview-textarea::-webkit-scrollbar-track {
+            background-color: #006cb929;
+        }
 
         .feedbackSection::-webkit-scrollbar {
             width: 12px;
         }
 
         .feedbackSection::-webkit-scrollbar-thumb {
-            background-color: #888;
+            background-color: #006cb94e;
             border-radius: 6px;
         }
 
         .feedbackSection::-webkit-scrollbar-track {
-            background-color: #eee;
+            background-color: #006cb929;
         }
 
         .fileInput {
@@ -669,11 +356,13 @@ if (isset($_POST['submitBtnPitching'])) {
         }
 
 
-        .deleteProjectBTN:hover,  .editProjectBTN:hover {
+        .deleteProjectBTN:hover,
+        .editProjectBTN:hover {
             background: #1591fd23;
             border-radius: 10px;
         }
-        .editProjectBTN{
+
+        .editProjectBTN {
             color: #006BB9;
             background: none;
             border: none;
@@ -696,10 +385,262 @@ if (isset($_POST['submitBtnPitching'])) {
             cursor: pointer;
             outline: none;
         }
+
+        .image-preview {
+            width: 320px;
+            /* Adjust the width as needed */
+            height: 320px;
+            /* Adjust the height as needed */
+            border: 1px solid #ccc;
+            border-radius: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+
+        }
+
+        .pdf-preview {
+            padding: 10px;
+            width: 100%;
+            height: auto;
+            border: 1px solid #ccc;
+            border-radius: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .image-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            /* Preserve aspect ratio while covering the entire container */
+        }
+
+        .cancelUpdateLogo {
+            cursor: pointer;
+            margin: 0;
+            color: gray;
+            display: none;
+        }
+
+        .cancelUpdateLogo:hover {
+            color: #cc0000;
+        }
+
+        .cancelUpdateCanvas {
+            cursor: pointer;
+            margin: 0;
+            color: gray;
+            display: none;
+        }
+
+        .cancelUpdateCanvas:hover {
+            color: #cc0000;
+        }
     </style>
 </head>
 
 <body>
+
+
+    <?php
+
+
+
+    if (isset($_POST['btnSave'])) {
+        $projectOverv = trim($_POST['project_overview']);
+        $count_ideation_phase_query = "SELECT COUNT(ideation_phase.IdeationID) AS Count 
+FROM ideation_phase 
+INNER JOIN project ON ideation_phase.Project_ID=project.Project_ID 
+WHERE project.Project_ID=$project_id;";
+
+        $count_ideation_phase_result = mysqli_query($conn, $count_ideation_phase_query);
+
+        function uploadProjectLogo()
+        {
+            $targetDir = "images/";
+            $timestamp = time();
+            $targetFile = $targetDir . $timestamp . '_' . basename($_FILES["project_logo"]["name"]);
+            move_uploaded_file($_FILES["project_logo"]["tmp_name"], $targetFile);
+            return $targetFile;
+        }
+        function uploadPdfFile()
+        {
+            $targetDir = "pdf/";
+            $timestamp = time();
+            $targetFile = $targetDir . $timestamp . '_' . basename($_FILES["canvas_file"]["name"]);
+            $fileType = strtolower(pathinfo($targetFile, PATHINFO_EXTENSION));
+            if ($fileType !== "pdf") {
+                echo "<script>
+                Swal.fire({
+                  icon: 'error',
+                  title: 'Invalid File Type',
+                  text: 'Please upload a PDF file.',
+                });
+              </script>";
+                return false;
+            }
+            move_uploaded_file($_FILES["canvas_file"]["tmp_name"], $targetFile);
+            return $targetFile;
+        }
+
+
+
+        if (mysqli_num_rows($count_ideation_phase_result) > 0) {
+            $row = mysqli_fetch_assoc($count_ideation_phase_result);
+            $count = $row['Count'];
+
+
+
+
+
+
+            if ($count > 0) {
+
+
+                if ($_FILES["project_logo"]["error"] == 0) {
+                    $newProjectLogo = uploadProjectLogo();
+                } else {
+                    $selectLogo = mysqli_query($conn, "SELECT Project_logo FROM ideation_phase WHERE project_id='$project_id'");
+                    if (mysqli_num_rows($selectLogo) > 0) {
+                        $row = mysqli_fetch_assoc($selectLogo);
+                        $newProjectLogo = $row['Project_logo'];
+                    }
+                }
+                if ($_FILES["canvas_file"]["error"] == 0) {
+                    $newModelCanvas = uploadPdfFile();
+                } else {
+                    $selectCanvas = mysqli_query($conn, "SELECT Project_Modelcanvas FROM ideation_phase WHERE project_id='$project_id'");
+                    if (mysqli_num_rows($selectCanvas) > 0) {
+                        $row = mysqli_fetch_assoc($selectCanvas);
+                        $newModelCanvas = $row['Project_Modelcanvas'];
+                    }
+                }
+
+                $updateQuery = "UPDATE ideation_phase SET 
+                Project_Overview='$projectOverv',
+                Project_logo='$newProjectLogo',
+                Project_Modelcanvas='$newModelCanvas'
+                WHERE project_id='$project_id'";
+
+                if (mysqli_query($conn, $updateQuery)) {
+                    echo "<script>
+                Swal.fire({
+                    title: 'Changes saved successfully!',
+                    text: '',
+                    icon: 'success',
+                    showConfirmButton: false,
+                    timer: 2000, 
+                }).then(function() {
+                    window.location.href = 'project.php?project_id=" . $_SESSION['projecid'] . "';
+                });
+            </script>";
+                } else {
+                    echo '<script type="text/javascript">';
+                    echo 'swal("Error!", "Error updating record: ' . mysqli_error($conn) . '", "error");';
+                    echo '</script>';
+                }
+
+
+              
+            } else {  //INSERT NEW PROJECT TO IDEATION PHASE 
+                if ($_FILES["project_logo"]["error"] == 0) {
+                    $ProjectLogo = uploadProjectLogo();
+                }
+                if ($_FILES["canvas_file"]["error"] == 0) {
+                    $ModelCanvas = uploadPdfFile();
+                }
+                $insertQuery = "INSERT INTO ideation_phase (`Project_ID`, `Project_logo`, `Project_Overview`, `Project_Modelcanvas`) 
+                VALUES ('$project_id', '$ProjectLogo', '$projectOverv', '$ModelCanvas')";
+
+
+
+                if (mysqli_query($conn, $insertQuery)) {
+                    echo "<script>
+                            Swal.fire({
+                                title: 'Your work has been saved successfully!',
+                                text: '',
+                                icon: 'success',
+                                showConfirmButton: false,
+                                timer: 2000, 
+                            }).then(function() {
+                                window.location.href = 'project.php?project_id=" . $_SESSION['projecid'] . "';
+                            });
+                            </script>";
+                } else {
+                    echo "<script>
+                            Swal.fire({
+                                title: 'Error:'".mysqli_error($conn).",
+                                text: '',
+                                icon: 'error',
+                                showConfirmButton: true,
+                            });
+                            </script>
+                    
+                    ";
+                }
+
+            }
+        }
+
+
+
+    }
+      //ditokana
+    if(isset($_POST['evalBtn'])){
+        
+    }
+
+    if (isset($_POST['submitBtnPitching'])) {
+        $video_pitch_name = $_FILES['video_pitch']['name'];
+        $video_pitch_tmp_name = $_FILES['video_pitch']['tmp_name'];
+        $video_pitch_error = $_FILES['video_pitch']['error'];
+
+        $pitch_deck_name = $_FILES['pitch_deck']['name'];
+        $pitch_deck_tmp_name = $_FILES['pitch_deck']['tmp_name'];
+        $pitch_deck_error = $_FILES['pitch_deck']['error'];
+
+        // Handle Video Pitch
+        if ($video_pitch_error === 0) {
+            $video_pitch_ex = pathinfo($video_pitch_name, PATHINFO_EXTENSION);
+            $video_pitch_ex_lc = strtolower($video_pitch_ex);
+            $allowed_video_exs = array("mp4", "webm", "avi", "flv");
+
+            if (in_array($video_pitch_ex_lc, $allowed_video_exs)) {
+                $new_video_pitch_name = uniqid("video-", true) . '.' . $video_pitch_ex_lc;
+                $video_pitch_upload_path = 'videos/' . $new_video_pitch_name;
+                move_uploaded_file($video_pitch_tmp_name, $video_pitch_upload_path);
+
+                // Handle Pitch Deck
+                if ($pitch_deck_error === 0) {
+                    $pitch_deck_ex = pathinfo($pitch_deck_name, PATHINFO_EXTENSION);
+                    $pitch_deck_ex_lc = strtolower($pitch_deck_ex);
+                    $allowed_pitch_deck_exs = array("pdf");
+
+                    if (in_array($pitch_deck_ex_lc, $allowed_pitch_deck_exs)) {
+                        $new_pitch_deck_name = uniqid("pitch_deck-", true) . '.' . $pitch_deck_ex_lc;
+                        $pitch_deck_upload_path = 'pdf/' . $new_pitch_deck_name;
+                        move_uploaded_file($pitch_deck_tmp_name, $pitch_deck_upload_path);
+
+                        // Insert both paths into the database
+                        $sql = "INSERT INTO pitching_phase VALUES ('', $project_id, '$new_video_pitch_name', '$new_pitch_deck_name', NOW())";
+                        mysqli_query($conn, $sql);
+
+                    } else {
+                        echo "<script>alert('You can\'t upload files of this type for Pitch Deck');</script>";
+                    }
+                }
+            } else {
+                echo "<script>alert('You can\'t upload files of this type for Video Pitch');</script>";
+            }
+        }
+
+
+    }
+    ?>
 
     <aside class="sidebar">
         <header class="sidebar-header">
@@ -822,25 +763,24 @@ if (isset($_POST['submitBtnPitching'])) {
         }
     }
     ?>
-     <?php
-        if (isset($_GET['project_id'])) {
-            //PROJECTID
-            $project_id = $_GET['project_id'];
-            $_SESSION['projecid'] = $project_id;
-            // echo "<h1>".$project_id."</h1>";
-        
-            $selectProjectInfo = mysqli_query($conn, "SELECT * FROM project WHERE Project_ID = $project_id");
-
-            if (mysqli_num_rows($selectProjectInfo) > 0) {
-                $row = mysqli_fetch_assoc($selectProjectInfo);
-                $project_name = $row['Project_title'];
-            }
-
-            ?>
     <?php
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        if (isset($_POST['deleteProject'])) {
-            echo "
+    if (isset($_GET['project_id'])) {
+        //PROJECTID
+        $project_id = $_GET['project_id'];
+        // echo "<h1>".$project_id."</h1>";
+    
+        $selectProjectInfo = mysqli_query($conn, "SELECT * FROM project WHERE Project_ID = $project_id");
+
+        if (mysqli_num_rows($selectProjectInfo) > 0) {
+            $row = mysqli_fetch_assoc($selectProjectInfo);
+            $project_name = $row['Project_title'];
+        }
+
+        ?>
+        <?php
+        if ($_SERVER["REQUEST_METHOD"] == "POST") {
+            if (isset($_POST['deleteProject'])) {
+                echo "
             <script>
                 Swal.fire({
                     title: 'Are you sure to delete this project?',
@@ -867,7 +807,7 @@ if (isset($_POST['submitBtnPitching'])) {
                                     showConfirmButton: false,
                                     timer: 2000,
                                 }).then(function () {
-                                    window.location.href = 'company_view.php?Company_id=" . $_SESSION['copid']. "';
+                                    window.location.href = 'company_view.php?Company_id=" . $_SESSION['copid'] . "';
                                 });
                             }
                         });
@@ -875,18 +815,18 @@ if (isset($_POST['submitBtnPitching'])) {
                 });
             </script>
             ";
-        }else  if (isset($_POST['editProject'])) {
-            $newProjectName = mysqli_real_escape_string($conn, $_POST["project_name"]);
-            $newProjectDescription = mysqli_real_escape_string($conn, $_POST["project_description"]);
-            $selectedProjectID = mysqli_real_escape_string($conn, $_SESSION['projecid']);
+            } else if (isset($_POST['editProject'])) {
+                $newProjectName = mysqli_real_escape_string($conn, $_POST["project_name"]);
+                $newProjectDescription = mysqli_real_escape_string($conn, $_POST["project_description"]);
+                $selectedProjectID = mysqli_real_escape_string($conn, $_SESSION['projecid']);
 
-            $updateQuery = "UPDATE project SET 
+                $updateQuery = "UPDATE project SET 
                     Project_title='$newProjectName',
                     Project_description='$newProjectDescription'
                     WHERE Project_id='$selectedProjectID'";
 
-            if (mysqli_query($conn, $updateQuery)) {
-                echo "<script>
+                if (mysqli_query($conn, $updateQuery)) {
+                    echo "<script>
                     Swal.fire({
                         title: 'Changes saved successfully!',
                         text: '',
@@ -897,74 +837,75 @@ if (isset($_POST['submitBtnPitching'])) {
                         window.location.href = 'project.php?project_id=" . $_SESSION['projecid'] . "';
                     });
                 </script>";
-            } else {
-                echo '<script type="text/javascript">';
-                echo 'swal("Error!", "Error updating record: ' . mysqli_error($conn) . '", "error");';
-                echo '</script>';
+                } else {
+                    echo '<script type="text/javascript">';
+                    echo 'swal("Error!", "Error updating record: ' . mysqli_error($conn) . '", "error");';
+                    echo '</script>';
+                }
             }
         }
-    }
-?>
+        ?>
 
 
 
-    <div class="content">
-        <div class="projectMenu">
+        <div class="content">
+            <div class="projectMenu">
 
-            
+
                 <button id="viewComp" class="editProjectBTN"><i class="fas fa-users"></i> Project Team</button>
-         
-
-
-                <button id="editComp" class="editProjectBTN"><i class="fas fa-info-circle" title="Information"></i> Project Description</button>
-            
-
-
-            <form action="" method="post">
-                <input type="hidden" name="deleteProject">
-                <button type="submit" class="deleteProjectBTN"><i class="fas fa-trash-alt"></i> Delete Project</button>
-            </form>
-
-        </div>
 
 
 
+                <button id="editComp" class="editProjectBTN"><i class="fas fa-info-circle" title="Information"></i> Project
+                    Description</button>
 
 
 
-
-        <div id="editModal" class="modalBlock">
-            <div class="modal-edit">
-                <form class="editForm" action="" method="post" enctype="multipart/form-data">
-                <input type="hidden" name="editProject">
-                    <div class="editTop" style="display: flex; justify-content: space-between;">
-                        <h3>
-                            <?php echo $project_name ?>'s Description
-                        </h3>
-                        <span class="closeEditM" style="cursor: pointer; color: #006BB9;">&times;</span>
-                    </div>
-                        <p id="editP" style="color: #006BB9; cursor: pointer;"><i class="fas fa-edit"></i> Edit</p><br>
-                    <?php
-                   $projectDesc = mysqli_query($conn, "SELECT * FROM project WHERE project_id='{$_SESSION['projecid']}'");
-                    if (mysqli_num_rows($projectDesc) > 0) {
-                        $row = mysqli_fetch_assoc($projectDesc);
-                        ?>
-                        <p>Project Name:</p>
-                        <input type="text" id="project_name" name="project_name" value="<?php echo $project_name ?>"
-                            required readonly>
-                        <p>Project Description:</p>
-                        <textarea id="project_description" name="project_description" rows="8"
-                            required readonly class="prodesc"><?php echo $row['Project_Description']; ?></textarea>
-                        
-                    <?php } ?>
-                    
-                    <input type="submit" value="Save Changes" name="submit" style="visibility: hidden;"><br>
-                    <p id="cancelBTN" style="text-align: center; cursor: pointer; visibility: hidden;" >Cancel</p>
-                    
-                    <br>
+                <form action="" method="post">
+                    <input type="hidden" name="deleteProject">
+                    <button type="submit" class="deleteProjectBTN"><i class="fas fa-trash-alt"></i> Delete Project</button>
                 </form>
+
             </div>
-        </div>
+
+
+
+
+
+
+
+            <div id="editModal" class="modalBlock">
+                <div class="modal-edit">
+                    <form class="editForm" action="" method="post" enctype="multipart/form-data">
+                        <input type="hidden" name="editProject">
+                        <div class="editTop" style="display: flex; justify-content: space-between;">
+                            <h3>
+                                <?php echo $project_name ?>'s Description
+                            </h3>
+                            <span class="closeEditM" style="cursor: pointer; color: #006BB9;">&times;</span>
+                        </div>
+                        <p id="editP" style="color: #006BB9; cursor: pointer;"><i class="fas fa-edit"></i> Edit</p><br>
+                        <?php
+                        $projectDesc = mysqli_query($conn, "SELECT * FROM project WHERE project_id='{$_SESSION['projecid']}'");
+                        if (mysqli_num_rows($projectDesc) > 0) {
+                            $row = mysqli_fetch_assoc($projectDesc);
+                            ?>
+                            <p>Project Name:</p>
+                            <input type="text" id="project_name" name="project_name" value="<?php echo $project_name ?>"
+                                required readonly>
+                            <p>Project Description:</p>
+                            <textarea id="project_description" name="project_description" rows="8" required readonly
+                                class="prodesc"><?php echo $row['Project_Description']; ?></textarea>
+
+                        <?php } ?>
+
+                        <input type="submit" value="Save Changes" name="submit" style="visibility: hidden;"><br>
+                        <p id="cancelBTN" style="text-align: center; cursor: pointer; visibility: hidden;">Cancel</p>
+
+                        <br>
+                    </form>
+                </div>
+            </div>
 
 
 
@@ -978,7 +919,7 @@ if (isset($_POST['submitBtnPitching'])) {
 
 
 
-       
+
             <!-- echo the company id here -->
             <div
                 style="text-decoration: none; display: flex; align-items: center; justify-content: space-between; width: 90%; padding: 30px; margin: 15px; height: 80px;">
@@ -1074,33 +1015,95 @@ if (isset($_POST['submitBtnPitching'])) {
 
 
                             <?php
-                            $select_ideation_phase = mysqli_query($conn, "SELECT ideation_phase.Project_Overview, ideation_phase.Project_logo, ideation_phase.Project_Modelcanvas FROM ideation_phase INNER JOIN project ON ideation_phase.Project_ID=project.Project_ID WHERE project.Project_ID=$project_id;");
+                            $select_ideation_phase = mysqli_query($conn, "SELECT ideation_phase.Project_Overview, ideation_phase.Project_logo, ideation_phase.Project_Modelcanvas FROM ideation_phase INNER JOIN project ON ideation_phase.Project_ID=project.Project_ID WHERE project.Project_ID=$project_id LIMIT 1;");
 
                             if (mysqli_num_rows($select_ideation_phase) > 0) {
                                 $row = mysqli_fetch_assoc($select_ideation_phase);
                                 $overview = $row['Project_Overview'];
                                 //if merong record
                                 ?>
-                                <label for="project_overview">
+                                <!-- <label for="project_overview">
                                     <h5>Project Overview: </h5>
                                 </label>
-                                <textarea name="project_overview" cols="100" rows="30"><?php if (isset($overview))
-                                    echo $overview ?></textarea>
+                                <textarea name="project_overview" cols="100" rows="30"><?php //if (isset($overview))
+                                        //echo $overview ?></textarea>
 
                                     <h5>Comment overview</h5>
-                                    <textarea cols="100" rows="5" readonly><?php if (isset($comment_overview))
-                                    echo $comment_overview; ?></textarea>
+                                    <textarea cols="100" rows="5" readonly><?php // if (isset($comment_overview))
+                                            //echo $comment_overview; ?></textarea> -->
+
+                                <div class="phaseSection">
+                                    <p class="sectionTitle">
+                                        1. Detailed Project Overview</p>
+
+                                    <p class="projectOverviewDirection">In this space, provide a comprehensive summary of your
+                                        project, highlighting its key
+                                        aspects and objectives. Consider including the following elements:</p>
+                                    <p class="projectOverviewDirection2">
+                                        <b>Objective/Purpose:</b> Briefly describe the primary goal or purpose of your project.
+                                        What
+                                        problem does it aim to solve or what need does it fulfill?<br>
+
+                                        <b>Scope: </b>Define the boundaries and limitations of your project. What is included,
+                                        and what
+                                        is excluded? This helps set expectations for stakeholders. <br>
+
+                                        <b>Target Audience: </b>Identify the intended users or beneficiaries of your project.
+                                        Understanding your audience is crucial for tailoring the project to meet their needs.
+                                        <br>
+                                        <b>Key Features: </b>Outline the main features or functionalities that your project will
+                                        offer.
+                                        This gives readers a snapshot of what to expect.
+                                    </p>
+
+                                    <textarea class="projectOverview-textarea" name="project_overview" cols="100" rows="20"
+                                        required placeholder="Write your project overview here..."
+                                        style="margin-top: 0;"><?php echo $overview ?></textarea>
+
+                                    <div class="feedbackTitle"><i class="fas fa-caret-down"></i> Feedbacks</div>
+                                    <div class="feedbackSection">
+
+                                        <div class="feedbackBlock">
+
+                                            <div class="feedback-info">
+                                                <span class="commenter">Moniqua Lee</span>
+                                                <span class="feedbackdate">(Mentor) • 1hr ago</span>
+                                            </div>
+                                            <p class="feedbackContent">Oh
+                                                that's beautiful!Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+                                                eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
+                                                veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+                                                consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum
+                                                dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident,
+                                                sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                                        </div>
+                                        <div class="feedbackBlock">
+
+                                            <div class="feedback-info">
+                                                <span class="commenter">Sam Brown</span>
+                                                <span class="feedbackdate">(Evaluator) • 3 days ago</span>
+                                            </div>
+                                            <p class="feedbackContent">Oh
+                                                that's beautiful!Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+                                                eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
+                                                veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex non
+                                                proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+
                                 <?php
                             } else {
                                 //if wala pang record
                                 ?>
                                 <div class="phaseSection">
                                     <p class="sectionTitle">
-                                        1. Project Overview</p>
+                                        1. Detailed Project Overview</p>
 
                                     <p class="projectOverviewDirection">In this space, provide a comprehensive summary of your
                                         project, highlighting its key
-                                        aspects and objectives. Consider including the following elements:</p><br>
+                                        aspects and objectives. Consider including the following elements:</p>
                                     <p class="projectOverviewDirection2">
                                         <b>Objective/Purpose:</b> Briefly describe the primary goal or purpose of your project.
                                         What
@@ -1118,8 +1121,8 @@ if (isset($_POST['submitBtnPitching'])) {
                                         This gives readers a snapshot of what to expect.
                                     </p>
                                     <textarea class="projectOverview-textarea" name="project_overview" cols="100" rows="20"
-                                        required></textarea>
-                                    <div class="feedbackTitle">Feedbacks:</div>
+                                        required placeholder="Write your project overview here..."></textarea>
+                                    <div class="feedbackTitle"><i class="fas fa-caret-down"></i> Feedbacks</div>
 
                                     <div class="feedbackSection">
 
@@ -1160,29 +1163,104 @@ if (isset($_POST['submitBtnPitching'])) {
 
 
                             <?php
-                            $select_ideation_phase = mysqli_query($conn, "SELECT ideation_phase.Project_Overview, ideation_phase.Project_logo, ideation_phase.Project_Modelcanvas FROM ideation_phase INNER JOIN project ON ideation_phase.Project_ID=project.Project_ID WHERE project.Project_ID=$project_id;");
+                            $select_ideation_phase = mysqli_query($conn, "SELECT ideation_phase.Project_Overview, ideation_phase.Project_logo, ideation_phase.Project_Modelcanvas FROM ideation_phase INNER JOIN project ON ideation_phase.Project_ID=project.Project_ID WHERE project.Project_ID=$project_id LIMIT 1;");
 
                             if (mysqli_num_rows($select_ideation_phase) > 0) {
                                 $row = mysqli_fetch_assoc($select_ideation_phase);
                                 $logo_ideation = $row['Project_logo'];
                                 //if merong record
                                 ?>
-                                <h3>Project Logo:</h3>
+                                <!-- <h3>Project Logo:</h3> -->
 
-                                <div class="img-container">
-                                    <img src="<?php if (isset($logo_ideation)) {
-                                        echo $logo_ideation;
-                                    } ?>" alt="Logo_img">
-                                </div>
-                                <label for="project_logo">
+
+                                <!-- <label for="project_logo">
                                     <h5>Select another logo:</h5>
                                 </label>
                                 <input type="file" name="project_logo">
 
                                 <h5>Comment Logo</h5>
-                                <textarea cols="100" rows="5" readonly><?php if (isset($comment_logo)) {
-                                    echo $comment_logo;
-                                } ?></textarea>
+                                <textarea cols="100" rows="5" readonly><?php //if (isset($comment_logo)) {
+                                        //echo $comment_logo;
+                                        //} ?></textarea> -->
+
+
+
+
+                                <div class="phaseSection">
+                                    <p class="sectionTitle">
+                                        2. Project Logo</p>
+
+                                    <p class="projectOverviewDirection">In this section, kindly upload the logo your project's
+                                        logo in PNG format. Ensure the logo is original, capturing the essence of your project.
+                                        It should be a visual representation that reflects the core values and identity of your
+                                        startup</p><br>
+                                    <h3 style="margin-top: 0;">
+                                        <?php if (isset($project_name)) {
+                                            echo $project_name;
+                                        } ?>'s Current Logo
+                                    </h3>
+
+                                    <div class="img-container" style="display: flex;
+                                            justify-content: center;
+                                                align-items: center;">
+                                        <img src="<?php if (isset($logo_ideation)) {
+                                            echo $logo_ideation;
+                                        } ?>" alt="Logo_img" width="320px" height="320px" style=" border-radius: 20px">
+                                    </div>
+                                    <br>
+                                    <hr>
+                                    <h3 style="font-size: 14px; margin: 0; margin-top: 15px;"><i class="fas fa-caret-down"></i>
+                                        Change your Project Logo</h3>
+                                    <span
+                                        style="text-decoration: none; font-weight: 400; font-size: 12px; font-style:italic;">(Ignore
+                                        this when you do not want to change your project logo)</span><br><br>
+                                    <div style="width: 100%; display:flex; justify-content:center;">
+                                        <div class="image-preview" style="align-self: center;">
+                                            Image Preview here.
+                                        </div>
+                                    </div><br>
+
+                                    <label for="projectLogo" class="fileInputLabel" id="projectLogoInputLabel"><i
+                                            class="fa fa-upload" style="color: #0f73d2;"></i> Choose your New Project
+                                        Logo</label>
+                                    <input id="projectLogo" class="fileInput" type="file" name="project_logo" accept="image/png"
+                                        onchange="displayFileName('projectLogo')">
+                                    <div> <a class="cancelUpdateLogo" id="cancelUpdateLogo"
+                                            onclick="cancelFileUpdate()">Cancel</a></div>
+
+
+
+
+
+
+                                    <div class="feedbackTitle"><i class="fas fa-caret-down"></i> Feedbacks</div>
+
+                                    <div class="feedbackSection">
+
+                                        <div class="feedbackBlock">
+
+                                            <div class="feedback-info">
+                                                <span class="commenter">Moniqua Lee</span>
+                                                <span class="feedbackdate">(Mentor) • 1hr ago</span>
+                                            </div>
+                                            <p class="feedbackContent">
+                                                consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum
+                                                dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident,
+                                                sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                                        </div>
+                                        <div class="feedbackBlock">
+
+                                            <div class="feedback-info">
+                                                <span class="commenter">Sam Brown</span>
+                                                <span class="feedbackdate">(Evaluator) • 3 days ago</span>
+                                            </div>
+                                            <p class="feedbackContent">
+                                                veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex non
+                                                proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                                        </div>
+                                    </div>
+                                </div>
+
                                 <?php
                             } else {
                                 //if wala pang record
@@ -1194,24 +1272,31 @@ if (isset($_POST['submitBtnPitching'])) {
 
                                 <div class="phaseSection">
                                     <p class="sectionTitle">
-                                        Project Logo</p>
+                                        2. Project Logo</p>
 
                                     <p class="projectOverviewDirection">In this section, kindly upload the logo your project's
                                         logo in PNG format. Ensure the logo is original, capturing the essence of your project.
                                         It should be a visual representation that reflects the core values and identity of your
                                         startup</p><br>
 
-
-
+                                    <div style="width: 100%; display:flex; justify-content:center;">
+                                        <div class="image-preview" style="align-self: center;">
+                                            Image Preview here.
+                                        </div>
+                                    </div>
+                                    <br>
                                     <label for="projectLogo" class="fileInputLabel" id="projectLogoInputLabel"><i
-                                            class="fa fa-upload" style="color: #0f73d2;"></i> Upload your Project Logo</label>
-                                    <input id="projectLogo" class="fileInput" type="file" name="project_logo"
+                                            class="fa fa-upload" style="color: #0f73d2;"></i> Choose your Project
+                                        Logo Here</label>
+                                    <input id="projectLogo" class="fileInput" type="file" name="project_logo" accept="image/png"
                                         onchange="displayFileName('projectLogo')">
+                                    <div> <a class="cancelUpdateLogo" id="cancelUpdateLogo"
+                                            onclick="cancelFileUpdate()">Cancel</a></div>
 
 
 
 
-                                    <div class="feedbackTitle">Feedbacks:</div>
+                                    <div class="feedbackTitle"><i class="fas fa-caret-down"></i> Feedbacks</div>
 
                                     <div class="feedbackSection">
 
@@ -1255,8 +1340,8 @@ if (isset($_POST['submitBtnPitching'])) {
                                 $model_canvas_ideation = $row['Project_Modelcanvas'];
                                 //if merong record
                                 ?>
-                                <h3>Project Model Canvas:</h3>
-                                <embed type="application/pdf" src="<?php echo $model_canvas_ideation; ?>" width="580"
+                                <!-- <h3>Project Model Canvas:</h3>
+                                <embed type="application/pdf" src="<?php //echo $model_canvas_ideation; ?>" width="580"
                                     height="600">
 
                                 <label for="model_canvas">
@@ -1265,8 +1350,95 @@ if (isset($_POST['submitBtnPitching'])) {
                                 <input type="file" name="model_canvas">
 
                                 <h5>Comment Model Canvas</h5>
-                                <textarea cols="100" rows="5" readonly><?php if (isset($comment_canvas))
-                                    echo $comment_canvas ?></textarea>
+                                <textarea cols="100" rows="5" readonly><?php //if (isset($comment_canvas))
+                                        //echo $comment_canvas ?></textarea> -->
+
+
+
+                                <div class="phaseSection">
+                                    <p class="sectionTitle">
+                                        3. Startup Model Canvas</p>
+
+                                    <p class="projectOverviewDirection">In this section, kindly upload your project's Model
+                                        Canvas in PDF format. The Model Canvas is a strategic management tool that provides a
+                                        holistic view of your project's key components. It typically includes sections on your
+                                        project's value proposition, customer segments, channels, revenue streams, cost
+                                        structure, and more. Ensure your Model Canvas encapsulates crucial details about your
+                                        project's business model, allowing stakeholders to understand its key elements at a
+                                        glance. If you're new to the concept, think of the Model Canvas as a snapshot of your
+                                        project's strategy and execution plan. We look forward to reviewing your comprehensive
+                                        overview!</p>
+                                    <h3 style="margin-top: 0;">
+                                        <?php if (isset($project_name)) {
+                                            echo $project_name;
+                                        } ?>'s Current Startup Model Canvas
+                                    </h3>
+
+                                    <embed type="application/pdf" src="<?php echo $model_canvas_ideation; ?>">
+                                    <br><br>
+
+
+                                    <hr>
+                                    <h3 style="font-size: 14px; margin: 0; margin-top: 15px;"><i class="fas fa-caret-down"></i>
+                                        Change your Startup Model Canvas</h3>
+                                    <span
+                                        style="text-decoration: none; font-weight: 400; font-size: 12px; font-style:italic;">(Ignore
+                                        this when you do not want to change your startup model canvas)</span><br><br>
+
+
+
+
+                                    <br>
+                                    <div class="pdf-preview">
+                                        PDF preview here.
+                                    </div>
+                                    <br><br>
+
+                                    <label for="canvasFile" class="fileInputLabel" id="canvasFileInputLabel"><i
+                                            class="fa fa-upload" style="color: #0f73d2;"></i> Choose your New Startup Model
+                                        Canvas</label>
+                                    <input id="canvasFile" class="fileInput" type="file" name="canvas_file"
+                                        accept="application/pdf" onchange="displayPdfFile('canvasFile')">
+
+
+                                    <div>
+
+                                        <a class="cancelUpdateCanvas" id="cancelUpdateCanvas"
+                                            onclick="cancelCanvasUpdate()">Cancel</a>
+
+
+                                    </div>
+
+
+                                    <div class="feedbackTitle"><i class="fas fa-caret-down"></i> Feedbacks</div>
+
+                                    <div class="feedbackSection">
+
+                                        <div class="feedbackBlock">
+
+                                            <div class="feedback-info">
+                                                <span class="commenter">Moniqua Lee</span>
+                                                <span class="feedbackdate">(Mentor) • 1hr ago</span>
+                                            </div>
+                                            <p class="feedbackContent">
+                                                consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum
+                                                dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident,
+                                                sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                                        </div>
+                                        <div class="feedbackBlock">
+
+                                            <div class="feedback-info">
+                                                <span class="commenter">Sam Brown</span>
+                                                <span class="feedbackdate">(Evaluator) • 3 days ago</span>
+                                            </div>
+                                            <p class="feedbackContent">
+                                                veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex non
+                                                proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+
 
                                 <?php
                             } else {
@@ -1278,7 +1450,7 @@ if (isset($_POST['submitBtnPitching'])) {
                                 <input type="file" name="model_canvas" required> -->
                                 <div class="phaseSection">
                                     <p class="sectionTitle">
-                                        Startup Model Canvas</p>
+                                        3. Startup Model Canvas</p>
 
                                     <p class="projectOverviewDirection">In this section, kindly upload your project's Model
                                         Canvas in PDF format. The Model Canvas is a strategic management tool that provides a
@@ -1290,14 +1462,24 @@ if (isset($_POST['submitBtnPitching'])) {
                                         project's strategy and execution plan. We look forward to reviewing your comprehensive
                                         overview!</p><br>
 
+                                    <div class="pdf-preview">
+                                        PDF preview here.
+                                    </div>
+                                    <br><br>
 
                                     <label for="canvasFile" class="fileInputLabel" id="canvasFileInputLabel"><i
-                                            class="fa fa-upload" style="color: #0f73d2;"></i> Upload your Startup Model
+                                            class="fa fa-upload" style="color: #0f73d2;"></i> Choose your Startup Model
                                         Canvas</label>
                                     <input id="canvasFile" class="fileInput" type="file" name="canvas_file"
-                                        onchange="displayFileName('canvasFile')">
+                                        accept="application/pdf" onchange="displayPdfFile('canvasFile')">
+                                    <div>
 
-                                    <div class="feedbackTitle">Feedbacks:</div>
+                                        <a class="cancelUpdateCanvas" id="cancelUpdateCanvas"
+                                            onclick="cancelCanvasUpdate()">Cancel</a>
+
+
+                                    </div>
+                                    <div class="feedbackTitle"><i class="fas fa-caret-down"></i> Feedbacks</div>
 
                                     <div class="feedbackSection">
 
@@ -1339,12 +1521,15 @@ if (isset($_POST['submitBtnPitching'])) {
                             </div> -->
                             <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
                                 <button class="saveBtn" name="btnSave"
-                                    style="width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; border-radius:20px; padding: 20px; font-weight: bold;">Save</button>
+                                    style="width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; border-radius:20px; padding: 20px; font-weight: bold;"
+                                    title="This will save your project's ideation phase. Easily return to your work later without losing progress.">Save</button>
                             </div>
+
                             <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
-                                <button class="mentorBtn" name="mentorBtn"
-                                    style="width:100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;border-radius:20px; padding: 20px; font-weight: bold;">Send
-                                    to Mentor</button>
+                                <button class="evalBtn" name="evalBtn"
+                                    style="width:100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;border-radius:20px; padding: 20px; font-weight: bold;"
+                                    title="You can only submit to evaluators when your Ideation Phase is already approved by your mentor.">Submit
+                                    to Evaluators</button>
                             </div>
                             <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
                                 <!-- <button class="evalBtn" name="evalBtn" style="width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;border-radius:20px; padding: 20px; font-weight: bold; color: ;" title="You can only send to evaluators when your Ideation Phase is fully approved">Send to Evaluators</button> -->
@@ -1477,53 +1662,65 @@ if (isset($_POST['submitBtnPitching'])) {
 
 
             <?php
-        } else {
-            echo "<script>alert('Project ID did not set.')</script>";
-        }
+    } else {
+        echo "<script>alert('Project ID did not set.')</script>";
+    }
 
-        ?>
+    ?>
     </div>
     <script>
         function displayFileName(inputId) {
             const labelId = `${inputId}InputLabel`;
             const input = document.getElementById(inputId);
             const label = document.getElementById(labelId);
-            const fileName = input.files[0].name;
-            label.textContent = `Selected file: ${fileName}`;
-        }
-    </script>
-    <script>
-        var modal = document.getElementById("editModal");
-        var btn = document.getElementById("editComp");
-        var span = document.getElementsByClassName("closeEditM")[0];
-        var cancell =document.getElementById("cancelBTN");
- 
-        btn.onclick = function () {
-            modal.style.display = "block";
-            document.body.style.overflow = "hidden";
-        }
-        span.onclick = function () {
-            modal.style.display = "none";
-            document.body.style.overflow = "visible";
-        }
-        cancell.onclick =function(){
-            modal.style.display = "none";
-            document.body.style.overflow = "visible";
-            location.reload();
+            const fileName = input.files[0]?.name;
+
+            const preview = document.querySelector('.image-preview');
+            if (!fileName) {
+                preview.innerHTML = 'Image Preview here.';
+            }
+
+            label.innerHTML = fileName
+                ? `Selected file: ${fileName}`
+                : '<i class="fa fa-upload" style="color: #0f73d2;"></i> Choose your New Project Logo';
+
+
+            const cancelLink = document.getElementById('cancelUpdateLogo');
+
+            if (fileName) {
+                const file = input.files[0];
+                const reader = new FileReader();
+
+                reader.onload = function (e) {
+                    const img = new Image();
+                    img.src = e.target.result;
+                    preview.innerHTML = '';
+                    preview.appendChild(img);
+                };
+
+                reader.readAsDataURL(file);
+
+                cancelLink.style.display = 'inline';
+            } else {
+                cancelLink.style.display = 'none';
+            }
         }
 
+        function cancelFileUpdate() {
+            const input = document.getElementById('projectLogo');
+            const label = document.getElementById('projectLogoInputLabel');
+            const cancelLink = document.getElementById('cancelUpdateLogo');
+            input.value = '';
+            label.innerHTML = '<i class="fa fa-upload" style="color: #0f73d2;"></i> Choose your New Project Logo';
+
+            const preview = document.querySelector('.image-preview');
+            preview.innerHTML = 'Image Preview here.';
+            cancelLink.style.display = 'none';
+        }
     </script>
     <script>
-    document.getElementById('editP').addEventListener('click', function() {
-        document.querySelector('input[name="submit"]').style.visibility = 'visible';
-        document.querySelector('p[style*="visibility: hidden;"]').style.visibility = 'visible';
-        document.getElementById('project_name').removeAttribute('readonly');
-        document.getElementById('project_description').removeAttribute('readonly');
-    });
-</script>
-<script>
         document.addEventListener("DOMContentLoaded", function () {
-            const firstName = "<?php echo $fname ?>"; 
+            const firstName = "<?php echo $fname ?>";
             const lastName = "<?php echo $lname ?>";
             const initials = getInitials(firstName, lastName);
             document.getElementById("initialsAvatar9").innerText = initials;
@@ -1536,7 +1733,88 @@ if (isset($_POST['submitBtnPitching'])) {
             );
         }
     </script>
+    <script>
+        function displayPdfFile(inputId) {
+            const labelId = `${inputId}InputLabel`;
+            const input = document.getElementById(inputId);
+            const label = document.getElementById(labelId);
+            const fileName = input.files[0]?.name;
 
+            const preview = document.querySelector('.pdf-preview');
+            const file = input.files[0];
+            if (!fileName) {
+                preview.innerHTML = 'PDF Preview here.';
+            }
+
+            label.innerHTML = fileName
+                ? `Selected file: ${fileName}`
+                : '<i class="fa fa-upload" style="color: #0f73d2;"></i> Choose your New Startup Model Canvas';
+
+
+            const cancelLink = document.getElementById('cancelUpdateCanvas');
+
+            if (file) {
+                const objectUrl = URL.createObjectURL(file);
+
+                const embed = document.createElement('embed');
+                embed.type = 'application/pdf';
+                embed.src = objectUrl;
+                embed.width = '100%';
+                embed.height = '500px';
+
+                preview.innerHTML = '';
+                preview.appendChild(embed);
+
+                cancelLink.style.display = 'inline';
+            } else {
+                preview.innerHTML = 'No PDF selected';
+                cancelLink.style.display = 'none';
+            }
+        }
+
+
+        function cancelCanvasUpdate() {
+            const input = document.getElementById('canvasFile');
+            const label = document.getElementById('canvasFileInputLabel');
+            const cancelLink = document.getElementById('cancelUpdateCanvas');
+            input.value = '';
+            label.innerHTML = '<i class="fa fa-upload" style="color: #0f73d2;"></i> Choose your New Startup Model Canvas';
+            const preview = document.querySelector('.pdf-preview');
+            preview.innerHTML = 'PDF Preview here.';
+            cancelLink.style.display = 'none';
+        }
+
+
+    </script>
+    <script>
+        var modal = document.getElementById("editModal");
+        var btn = document.getElementById("editComp");
+        var span = document.getElementsByClassName("closeEditM")[0];
+        var cancell = document.getElementById("cancelBTN");
+
+        btn.onclick = function () {
+            modal.style.display = "block";
+            document.body.style.overflow = "hidden";
+        }
+        span.onclick = function () {
+            modal.style.display = "none";
+            document.body.style.overflow = "visible";
+        }
+        cancell.onclick = function () {
+            modal.style.display = "none";
+            document.body.style.overflow = "visible";
+            location.reload();
+        }
+
+    </script>
+    <script>
+        document.getElementById('editP').addEventListener('click', function () {
+            document.querySelector('input[name="submit"]').style.visibility = 'visible';
+            document.querySelector('p[style*="visibility: hidden;"]').style.visibility = 'visible';
+            document.getElementById('project_name').removeAttribute('readonly');
+            document.getElementById('project_description').removeAttribute('readonly');
+        });
+    </script>
 </body>
 
 </html>

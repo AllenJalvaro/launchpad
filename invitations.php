@@ -204,7 +204,7 @@ if ($hasCompany) {
 
             $result = mysqli_query($conn, $query);
 
-            
+
 
 
 
@@ -215,13 +215,16 @@ if ($hasCompany) {
             while ($row = mysqli_fetch_assoc($result)) {
                 $dateString = htmlspecialchars($row['Project_date']);
                 $dateTime = new DateTime($dateString);
-                $formattedDate = $dateTime->format('j M Y, g:i a');
+               
+                    $formattedDatetime = $dateTime->format('j M Y, g:i a');
+                
+
                 echo "
                     <div class='invi-card'>
                         <span class='projectT'>" . htmlspecialchars($row['Project_title']) . "</span>" .
-                        "<span> Creator: " . htmlspecialchars($row['owner_name']) . "</span>" .
-                        "<span>" . $formattedDate . "</span>" .
-                        "<span>
+                    "<span> Creator: " . htmlspecialchars($row['owner_name']) . "</span>" .
+                    "<span>" . $formattedDatetime . "</span>" .
+                    "<span>
                             <button class='confirm-btn' onclick='confirm(" . $row['invitationID'] . ")'>Confirm</button>
                             <button class='delete-btn' onclick='deleteInvitation(" . $row['invitationID'] . ")'>Delete</button>
                         </span>

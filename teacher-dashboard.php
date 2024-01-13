@@ -146,27 +146,19 @@
                     </span>
                 </button>
             </a>
-            <a href="invitations.php">
+            <a href="teacher-projects.php">
                 <button>
                     <span>
-                        <i><img src="\launchpad\images\invitation-icon.png" alt="home-logo" class="logo-ic"></i>
-                        <span>Invitations</span>
+                        <i><img src="\launchpad\images\iconmentor.png" alt="home-logo" class="logo-ic"></i>
+                        <span>My Mentored Projects</span>
                     </span>
                 </button>
             </a>
-            <a href="investment.php">
+            <a href="teacher-evaluation.php">
                 <button>
                     <span>
-                        <i><img src="\launchpad\images\iconinvestment.png" alt="home-logo" class="logo-ic"></i>
-                        <span>Investment Requests</span>
-                    </span>
-                </button>
-            </a>
-            <a href="collabprojects.php">
-                <button>
-                    <span>
-                        <i><img src="\launchpad\images\iconpuzzle.png" alt="home-logo" class="logo-ic"></i>
-                        <span>Collab Projects</span>
+                        <i><img src="\launchpad\images\evaluationicon.png" alt="home-logo" class="logo-ic"></i>
+                        <span>Projects for Evaluation</span>
                     </span>
                 </button>
             </a>
