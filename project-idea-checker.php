@@ -34,7 +34,7 @@ if ($hasCompany) {
 require __DIR__ . '/vendor/autoload.php';
 use Orhanerday\OpenAi\OpenAi;
 
-$open_ai_key = "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";
+$open_ai_key = "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";
 $open_ai = new OpenAi($open_ai_key);
 $projectTitle;
 $response;
@@ -64,10 +64,12 @@ if (isset($_POST['submitG'])) {
     $complete = $open_ai->completion([
         'model' => 'gpt-3.5-turbo-instruct',
         'prompt' => <<<EOT
+
+        If the project idea is similar to other applications or systems, frankly say it in the explanation and give low percentage.
           If you receive the same prompt or idea over and over again, provide the same response you gave earlier, especially the percentage.
 
         The only response you will always display is the PERCENTAGE ONLY, then the explanation. NOTHING ELSE.
-    If the project idea is similar to other applications or systems, frankly say it in the explanation and give low percentage.
+    
 
     Scan and assess how unique the startup project idea is among all the existing systems, applications, or startup projects on the web.
     Do not be biased, be frank. Be honest whether it is common or unique.
@@ -89,7 +91,7 @@ if (isset($_POST['submitG'])) {
     Startup Project Description: $projectDesc
     EOT,
         'temperature' => 0.9,
-        'max_tokens' => 999,
+        'max_tokens' => 1000,
         'frequency_penalty' => 0,
         'presence_penalty' => 0.6,
     ]);
@@ -124,14 +126,19 @@ if (isset($_POST['submitG'])) {
                         List down 10 existing concepts/systems, with website links, that are similar to the idea of $projectTitle : $projectDesc
                         EOT,
                         'temperature' => 0.9,
-                        'max_tokens' => 999,
+                        'max_tokens' => 1000,
                         'frequency_penalty' => 0,
                         'presence_penalty' => 0.6,
                     ]);
                     $responseTitles = json_decode($completee, true);
-                    if (isset($responseTitles["choices"], $responseTitles["choices"][0], $responseTitles["choices"][0]["text"])) {
+
+                    if ($responseTitles && isset($responseTitles["choices"][0]["text"])) {
                         $responseTitles = $responseTitles["choices"][0]["text"];
+                    } else {
+                        // Handle the case where the expected structure is not present in the response
+                        $responseTitles = "Unable to retrieve response text.";
                     }
+                    
                     $resultTitles = "Some Similar Concepts/Systems to Your Startup Idea";
                     break;
                 case ($number >= 26 && $number <= 50.99):
@@ -142,14 +149,19 @@ if (isset($_POST['submitG'])) {
                         List down 10 existing concepts/systems, with website links, that are similar to the idea of $projectTitle : $projectDesc
                         EOT,
                         'temperature' => 0.9,
-                        'max_tokens' => 999,
+                        'max_tokens' => 1000,
                         'frequency_penalty' => 0,
                         'presence_penalty' => 0.6,
                     ]);
                     $responseTitles = json_decode($completee, true);
-                    if (isset($responseTitles["choices"], $responseTitles["choices"][0], $responseTitles["choices"][0]["text"])) {
+
+                    if ($responseTitles && isset($responseTitles["choices"][0]["text"])) {
                         $responseTitles = $responseTitles["choices"][0]["text"];
+                    } else {
+                        // Handle the case where the expected structure is not present in the response
+                        $responseTitles = "Unable to retrieve response text.";
                     }
+                    
                     $resultTitles = "Some Similar Concepts/Systems to Your Startup Idea";
                     break;
                 case ($number >= 51 && $number <= 75.99):
@@ -160,14 +172,19 @@ if (isset($_POST['submitG'])) {
                         Recommend 10 much better and proper titles for $projectTitle
                         EOT,
                         'temperature' => 0.9,
-                        'max_tokens' => 999,
+                        'max_tokens' => 1000,
                         'frequency_penalty' => 0,
                         'presence_penalty' => 0.6,
                     ]);
                     $responseTitles = json_decode($completee, true);
-                    if (isset($responseTitles["choices"], $responseTitles["choices"][0], $responseTitles["choices"][0]["text"])) {
+
+                    if ($responseTitles && isset($responseTitles["choices"][0]["text"])) {
                         $responseTitles = $responseTitles["choices"][0]["text"];
+                    } else {
+                        // Handle the case where the expected structure is not present in the response
+                        $responseTitles = "Unable to retrieve response text.";
                     }
+                    
                     $resultTitles = "Suggested Project Titles for Your Startup Project Idea";
                     break;
                 case ($number >= 76 && $number <= 89.99):
@@ -178,14 +195,19 @@ if (isset($_POST['submitG'])) {
                         List down 10 much better and proper titles for $projectTitle
                         EOT,
                         'temperature' => 0.9,
-                        'max_tokens' => 999,
+                        'max_tokens' => 1000,
                         'frequency_penalty' => 0,
                         'presence_penalty' => 0.6,
                     ]);
                     $responseTitles = json_decode($completee, true);
-                    if (isset($responseTitles["choices"], $responseTitles["choices"][0], $responseTitles["choices"][0]["text"])) {
+
+                    if ($responseTitles && isset($responseTitles["choices"][0]["text"])) {
                         $responseTitles = $responseTitles["choices"][0]["text"];
+                    } else {
+                        // Handle the case where the expected structure is not present in the response
+                        $responseTitles = "Unable to retrieve response text.";
                     }
+                    
                     $resultTitles = "Suggested Project Titles for Your Startup Project Idea";
                     break;
                 case ($number >= 90 && $number <= 100):
@@ -196,14 +218,19 @@ if (isset($_POST['submitG'])) {
                         List down 10 much better and proper startup project titles for $projectTitle
                         EOT,
                         'temperature' => 0.9,
-                        'max_tokens' => 999,
+                        'max_tokens' => 1000,
                         'frequency_penalty' => 0,
                         'presence_penalty' => 0.6,
                     ]);
                     $responseTitles = json_decode($completee, true);
-                    if (isset($responseTitles["choices"], $responseTitles["choices"][0], $responseTitles["choices"][0]["text"])) {
+
+                    if ($responseTitles && isset($responseTitles["choices"][0]["text"])) {
                         $responseTitles = $responseTitles["choices"][0]["text"];
+                    } else {
+                        // Handle the case where the expected structure is not present in the response
+                        $responseTitles = "Unable to retrieve response text.";
                     }
+                    
                     $resultTitles = "Suggested Project Titles for Your Startup Project Idea";
                     break;
                 default:

@@ -357,12 +357,14 @@ if ($selectedCompanyID) {
 
 
         .deleteProjectBTN:hover,
-        .editProjectBTN:hover {
+        .editProjectBTN:hover,
+        .ViewTeamBTN:hover {
             background: #1591fd23;
             border-radius: 10px;
         }
 
-        .editProjectBTN {
+        .editProjectBTN,
+        .ViewTeamBTN {
             color: #006BB9;
             background: none;
             border: none;
@@ -439,6 +441,15 @@ if ($selectedCompanyID) {
 
         .cancelUpdateCanvas:hover {
             color: #cc0000;
+        }
+
+        .name-holder {
+            border: 1px solid #093a5d;
+            color: #093a5d;
+            border-radius: 10px;
+            padding: 10px;
+            margin: 5px;
+            display: inline-block;
         }
     </style>
 </head>
@@ -545,7 +556,7 @@ WHERE project.Project_ID=$project_id;";
                 }
 
 
-              
+
             } else {  //INSERT NEW PROJECT TO IDEATION PHASE 
                 if ($_FILES["project_logo"]["error"] == 0) {
                     $ProjectLogo = uploadProjectLogo();
@@ -573,7 +584,7 @@ WHERE project.Project_ID=$project_id;";
                 } else {
                     echo "<script>
                             Swal.fire({
-                                title: 'Error:'".mysqli_error($conn).",
+                                title: 'Error:'" . mysqli_error($conn) . ",
                                 text: '',
                                 icon: 'error',
                                 showConfirmButton: true,
@@ -589,9 +600,9 @@ WHERE project.Project_ID=$project_id;";
 
 
     }
-      //ditokana
-    if(isset($_POST['evalBtn'])){
-        
+    //ditokana
+    if (isset($_POST['evalBtn'])) {
+
     }
 
     if (isset($_POST['submitBtnPitching'])) {
@@ -852,7 +863,7 @@ WHERE project.Project_ID=$project_id;";
             <div class="projectMenu">
 
 
-                <button id="viewComp" class="editProjectBTN"><i class="fas fa-users"></i> Project Team</button>
+                <button id="viewProjectTeam" class="ViewTeamBTN"><i class="fas fa-users"></i> Project Team</button>
 
 
 
@@ -909,14 +920,110 @@ WHERE project.Project_ID=$project_id;";
 
 
 
+            
+            <div id="viewTeam" class="modalBlock">
+                <div class="modal-edit">
+                    <div class="editTop" style="display: flex; justify-content: space-between;">
+                        <h3 style="color: #006BB9;">
+                            <?php echo $project_name ?>'s Team
+                        </h3>
+                        <span class="closeVT" style="cursor: pointer; color: #006BB9;">&times;</span>
+                    </div>
 
+                    <?php
+                    $selectCreator = "SELECT s.Student_fname, s.Student_lname, s.Student_email, s.Student_ID FROM project p, student_registration s, company_registration c WHERE c.student_id = s.student_id
+                          AND p.company_id = c.company_id
+                          AND p.project_id='{$_SESSION['projecid']}' LIMIT 1";
 
+                    $projectCre = mysqli_query($conn, $selectCreator);
+                    ?>
 
+                    <h4>Project Creator</h4>
+                    <div style="width: 100%; height: auto">
+                        <?php
+                        if (mysqli_num_rows($projectCre) > 0) {
+                            $row = mysqli_fetch_assoc($projectCre);
+                            $projCreator = $row['Student_ID'];
+                            echo "<script>console.log(".$_SESSION['projecid'].");</script>";
+                            ?>
+                           
+                            <div class="name-holder">
+                                <span style="color:#093a5d">
+                                    <?php echo $row['Student_fname'] . ' ' . $row['Student_lname'] . " (" . $row['Student_email'] . ")" ?>
+                                </span>
+                            </div>
+                        <?php } ?>
+                    </div>
 
+                    <br>
 
+                    <?php
+                    $selectQueryTeam = "SELECT s.Student_email, s.Student_fname, s.Student_lname FROM project_member p, student_registration s WHERE p.student_id = s.student_id
+                            AND p.project_id='{$_SESSION['projecid']}' AND s.student_id!='{$projCreator}'";
 
+                    $projectTea = mysqli_query($conn, $selectQueryTeam);
+                    ?>
 
+                    <h4>Team Members<span style="color: #565656; font-weight: 500; font-size: 12px; font-style: italic;"> (Members will appear here once they accepted your invitation request.)</span></h4>
+                    <div style="width: 100%; height: auto">
+                        <?php
+                        while ($row = mysqli_fetch_array($projectTea)) {
+                            ?>
+                            <div class="name-holder">
+                                <span style="color:#093a5d">
+                                    <?php echo $row['Student_fname'] . ' ' . $row['Student_lname'] . " (" . $row['Student_email'] . ")" ?>
+                                </span>
+                            </div>
+                        <?php } ?>
+                    </div>
 
+                    <?php
+                    $selectQueryMentor = "SELECT * FROM project_mentor p
+                              JOIN instructor_registration i ON p.mentor_id = i.instructor_id
+                              WHERE p.project_id='{$_SESSION['projecid']}' LIMIT 1";
+
+                    $projectMentor = mysqli_query($conn, $selectQueryMentor);
+                    ?>
+
+                    <br>
+
+                    <h4>Project Mentor</h4>
+                    <div style="width: 100%; height: auto">
+                        <?php
+                        while ($row = mysqli_fetch_array($projectMentor)) {
+                            ?>
+                            <div class="name-holder">
+                                <span style="color:#093a5d">
+                                    <?php echo $row['Instructor_fname'] . ' ' . $row['Instructor_lname'] . " (" . $row['Instructor_email'] . ")" ?>
+                                </span>
+                            </div>
+                        <?php } ?>
+                    </div>
+
+                    <?php
+                    $selectQueryEval = "SELECT * FROM project_evaluator p
+                            JOIN instructor_registration i ON p.evaluator_id = i.instructor_id
+                            WHERE p.project_id='{$_SESSION['projecid']}'";
+
+                    $projecteval = mysqli_query($conn, $selectQueryEval);
+                    ?>
+
+                    <br>
+                    <h4>Project Evaluators</h4>
+                    <div style="width: 100%; height: auto">
+                        <?php
+                        while ($row = mysqli_fetch_array($projecteval)) {
+                            ?>
+                            <div class="name-holder">
+                                <span style="color:#093a5d">
+                                    <?php echo $row['Instructor_fname'] . ' ' . $row['Instructor_lname'] . " (" . $row['Instructor_email'] . ")" ?>
+                                </span>
+                            </div>
+                        <?php } ?>
+                    </div>
+
+                </div>
+            </div>
 
 
 
@@ -1804,6 +1911,21 @@ WHERE project.Project_ID=$project_id;";
             modal.style.display = "none";
             document.body.style.overflow = "visible";
             location.reload();
+        }
+
+    </script>
+    <script>
+        var modall = document.getElementById("viewTeam");
+        var btnn = document.getElementById("viewProjectTeam");
+        var spann = document.getElementsByClassName("closeVT")[0];
+
+        btnn.onclick = function () {
+            modall.style.display = "block";
+            document.body.style.overflow = "hidden";
+        }
+        spann.onclick = function () {
+            modall.style.display = "none";
+            document.body.style.overflow = "visible";
         }
 
     </script>

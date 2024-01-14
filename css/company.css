@@ -342,14 +342,14 @@
 }  
 
 /* The Close Button */
-.closeEditM, .closeViewM {
+.closeEditM, .closeViewM, .closeVT {
     color: #333;
     font-size: 28px;
     font-weight: bold;
 }
 
-.closeEditM:hover, .closeViewM:hover
-.closeEditM:focus, .closeViewM:focus  {
+.closeEditM:hover, .closeViewM:hover, .closeVT:hover
+.closeEditM:focus, .closeViewM:focus, .closeVT:focus  {
     color: #000;
     text-decoration: none;
     cursor: pointer !important;

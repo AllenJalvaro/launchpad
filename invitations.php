@@ -58,6 +58,9 @@ if ($hasCompany) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Invitations - Launchpad</title>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.14/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.14/dist/sweetalert2.all.min.js"></script>
     <link rel="icon" href="/launchpad/images/favicon.svg" />
     <link rel="stylesheet" href="css/navbar.css">
     <link rel="stylesheet" href="css/invitation.css">
@@ -138,7 +141,7 @@ if ($hasCompany) {
                     </a>
                 <?php endforeach; ?>
             <?php endif; ?>
-            <br><br>
+
             <!-- <p class="divider-company">COMPANIES YOU'VE JOINED</p>
             <a href="#">
                 <button>
@@ -199,7 +202,7 @@ if ($hasCompany) {
           INNER JOIN project ON invitation.projectID = project.Project_ID 
           INNER JOIN student_registration ON invitation.inviteeID = student_registration.Student_ID 
           INNER JOIN company_registration ON project.Company_ID = company_registration.Company_ID
-          INNER JOIN student_registration AS owner ON company_registration.Student_ID = owner.Student_ID where student_registration.student_email = '$userEmail'
+          INNER JOIN student_registration AS owner ON company_registration.Student_ID = owner.Student_ID where student_registration.student_email = '$userEmail' AND invitation.Status = 'PENDING'
           ORDER BY invitation.invitationDate DESC";
 
             $result = mysqli_query($conn, $query);
@@ -213,20 +216,41 @@ if ($hasCompany) {
             }
 
             while ($row = mysqli_fetch_assoc($result)) {
-                $dateString = htmlspecialchars($row['Project_date']);
-                $dateTime = new DateTime($dateString);
-               
-                    $formattedDatetime = $dateTime->format('j M Y, g:i a');
-                
+                date_default_timezone_set('Asia/Manila');
+
+                $projectDate = new DateTime($row['Project_date']);
+                $currentDate = new DateTime();
+                $timeElapsed = $currentDate->getTimestamp() - $projectDate->getTimestamp();
+
+                if ($timeElapsed < 60) {
+                    $projectDate = 'Just Now';
+                } elseif ($timeElapsed < 3600) {
+                    $minutes = floor($timeElapsed / 60);
+                    $projectDate = ($minutes == 1) ? '1 min ago' : $minutes . ' mins ago';
+                } elseif ($timeElapsed < 86400) {
+                    $hours = floor($timeElapsed / 3600);
+                    $projectDate = ($hours == 1) ? '1 hr ago' : $hours . ' hrs ago';
+                } elseif ($timeElapsed < 604800) {
+                    $days = floor($timeElapsed / 86400);
+                    $projectDate = ($days == 1) ? '1 day ago' : $days . ' days ago';
+                } elseif ($timeElapsed < 1209600) {
+                    $projectDate = '1 week ago';
+                } elseif ($timeElapsed < 1814400) {
+                    $projectDate = '2 weeks ago';
+                } elseif ($timeElapsed < 2419200) {
+                    $projectDate = '3 weeks ago';
+                } else {
+                    $projectDate = $projectDate->format('j M Y, g:i a');
+                }
 
                 echo "
                     <div class='invi-card'>
                         <span class='projectT'>" . htmlspecialchars($row['Project_title']) . "</span>" .
                     "<span> Creator: " . htmlspecialchars($row['owner_name']) . "</span>" .
-                    "<span>" . $formattedDatetime . "</span>" .
+                    "<span>" . $projectDate . "</span>" .
                     "<span>
-                            <button class='confirm-btn' onclick='confirm(" . $row['invitationID'] . ")'>Confirm</button>
-                            <button class='delete-btn' onclick='deleteInvitation(" . $row['invitationID'] . ")'>Delete</button>
+                            <button class='confirm-btn' onclick='showConfirmation(" . $row['invitationID'] . ")'>Confirm</button>
+                            <button class='delete-btn' onclick='showRejection(" . $row['invitationID'] . ")'>Delete</button>
                         </span>
                     </div>
                 ";
@@ -234,6 +258,96 @@ if ($hasCompany) {
             }
             ?>
         </div>
+        <script>
+            function showConfirmation(invitationID) {
+                // Use SweetAlert to show a confirmation dialog
+                Swal.fire({
+                    text: 'Do you want to join the project?',
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes',
+                    cancelButtonText: 'No',
+                    
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // User clicked 'Yes', perform the AJAX request
+                        confirmInvitation(invitationID);
+                    }
+                });
+            }
+
+            function confirmInvitation(invitationID) {
+                // Prepare the data to be sent to the server
+                var data = { invitationID: invitationID };
+
+                // Use jQuery's AJAX function to send a POST request to the server
+                $.ajax({
+                    type: 'POST',
+                    url: 'accept_invitation.php',
+                    data: data,
+                    success: function (response) {
+                        // Handle the response from the server
+                        Swal.fire({
+                            title: 'Success',
+                            text: response,
+                            icon: 'success',
+                            timer: 20000,
+                            showConfirmButton: false,
+                        });
+                        setTimeout(function () {
+                            window.location.reload();
+                        }, 2000);
+                    },
+                    error: function (xhr, status, error) {
+                        // Handle errors if any
+                        console.error('Error: ' + status + ' - ' + error);
+                    }
+                });
+            }
+        </script>
+        <script>
+            function showRejection(invitationID) {
+                // Use SweetAlert to show a confirmation dialog
+                Swal.fire({
+                    text: 'Do you want to delete the request?',
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes',
+                    cancelButtonText: 'No',
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // User clicked 'Yes', perform the AJAX request
+                        deleteInvitation(invitationID);
+                    }
+                });
+            }
+            function deleteInvitation(invitationID) {
+                var data = { invitationID: invitationID };
+                $.ajax({
+                    type: 'POST',
+                    url: 'reject_invitation.php',
+                    data: data,
+                    success: function (response) {
+                        // Handle the response from the server
+                        Swal.fire({
+                            title: 'Invitation Deleted',
+                            text: response,
+                            icon: 'success',
+                            timer: 9000,
+                            showConfirmButton: false,
+                        });
+                        setTimeout(function () {
+                            window.location.reload();
+                        }, 2000);
+                    },
+                    error: function (xhr, status, error) {
+                        // Handle errors if any
+                        console.error('Error: ' + status + ' - ' + error);
+                    }
+                });
+            }
+        </script>
+
 
 
 

@@ -97,16 +97,16 @@ $resultProjects = mysqli_query($conn, $projectQuery);
                     success: function (response) {
 
                         console.log('!!Response:', response);
-                            Swal.fire({
-                                title: 'Success!',
-                                text: 'Your project has been created successfully!',
-                                icon: 'success',
-                                showConfirmButton: false,
-                                timer: 2000,
-                            }).then(function() {
-                                window.location.href = 'company_view.php?Company_id=<?php echo $_SESSION['copid']; ?>';
-                            });
-                        
+                        Swal.fire({
+                            title: 'Success!',
+                            text: 'Your project has been created successfully!',
+                            icon: 'success',
+                            showConfirmButton: false,
+                            timer: 2000,
+                        }).then(function () {
+                            window.location.href = 'company_view.php?Company_id=<?php echo $_SESSION['copid']; ?>';
+                        });
+
                     },
                     error: function (error) {
 
@@ -422,16 +422,28 @@ $resultProjects = mysqli_query($conn, $projectQuery);
             });
         }
 
+        const maxEvaluators = 3;
         function addEvaluator(evaluatorID, evaluatorName) {
-            if (!selectedEvaluators.includes(evaluatorID)) {
-                selectedEvaluators.push(evaluatorID);
-                $('#selectedEvaluators').append(`<div data-id="${evaluatorID}">${evaluatorName} <span class="removeEvaluator" data-id="${evaluatorID}">x</span></div>`);
-                console.log("Added Evaluator:", evaluatorID);
-                console.log("Selected Evaluators after addition:", selectedEvaluators);
+            if (selectedEvaluators.length < maxEvaluators) {
+                if (!selectedEvaluators.includes(evaluatorID)) {
+                    selectedEvaluators.push(evaluatorID);
+                    $('#selectedEvaluators').append(`<div data-id="${evaluatorID}">${evaluatorName} <span class="removeEvaluator" data-id="${evaluatorID}">x</span></div>`);
+                    console.log("Added Evaluator:", evaluatorID);
+                    console.log("Selected Evaluators after addition:", selectedEvaluators);
+                } else {
+                    console.log("Evaluator already exists:", evaluatorID);
+                }
             } else {
-                console.log("Evaluator already exists:", evaluatorID);
+                Swal.fire({
+                    text: 'Your can only select 3 evaluators!',
+                    icon: 'warning',
+                    showConfirmButton: true
+                });
+
+                console.log("Maximum number of evaluators reached:", maxEvaluators);
             }
         }
+
 
         $('#selectedEvaluators').on('click', '.removeEvaluator', function () {
             const evaluatorID = $(this).data('id');

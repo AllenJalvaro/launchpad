@@ -197,31 +197,31 @@ $_SESSION['copid'] = $copid;
     }
     ?>
     <div class="content2">
-         <?php
+        <?php
 
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
             if (isset($_POST['form1'])) {
-            $newCompanyName = mysqli_real_escape_string($conn, $_POST["company_name"]);
-            $newCompanyDescription = mysqli_real_escape_string($conn, $_POST["company_description"]);
-            $selectedCompanyID = mysqli_real_escape_string($conn, $selectedCompanyID);
+                $newCompanyName = mysqli_real_escape_string($conn, $_POST["company_name"]);
+                $newCompanyDescription = mysqli_real_escape_string($conn, $_POST["company_description"]);
+                $selectedCompanyID = mysqli_real_escape_string($conn, $selectedCompanyID);
 
-            if ($_FILES["company_logo"]["error"] == 0) {
-                $newCompanyLogo = uploadCompanyLogo();
-            } else {
-                $selectLogo = mysqli_query($conn, "SELECT Company_logo FROM company_registration WHERE company_id='$selectedCompanyID'");
-                if (mysqli_num_rows($selectLogo) > 0) {
-                    $row = mysqli_fetch_assoc($selectLogo);
-                    $newCompanyLogo = $row['Company_logo'];
+                if ($_FILES["company_logo"]["error"] == 0) {
+                    $newCompanyLogo = uploadCompanyLogo();
+                } else {
+                    $selectLogo = mysqli_query($conn, "SELECT Company_logo FROM company_registration WHERE company_id='$selectedCompanyID'");
+                    if (mysqli_num_rows($selectLogo) > 0) {
+                        $row = mysqli_fetch_assoc($selectLogo);
+                        $newCompanyLogo = $row['Company_logo'];
+                    }
                 }
-            }
-            $updateQuery = "UPDATE company_registration SET 
+                $updateQuery = "UPDATE company_registration SET 
                     Company_name='$newCompanyName',
                     Company_description='$newCompanyDescription',
                     Company_logo='$newCompanyLogo'
                     WHERE company_id='$selectedCompanyID'";
 
-            if (mysqli_query($conn, $updateQuery)) {
-                echo "<script>
+                if (mysqli_query($conn, $updateQuery)) {
+                    echo "<script>
                     Swal.fire({
                         title: 'Changes saved successfully!',
                         text: '',
@@ -232,14 +232,14 @@ $_SESSION['copid'] = $copid;
                         window.location.href = 'company_view.php?Company_id=" . $_SESSION['copid'] . "';
                     });
                 </script>";
-            } else {
-                echo '<script type="text/javascript">';
-                echo 'swal("Error!", "Error updating record: ' . mysqli_error($conn) . '", "error");';
-                echo '</script>';
-            }
+                } else {
+                    echo '<script type="text/javascript">';
+                    echo 'swal("Error!", "Error updating record: ' . mysqli_error($conn) . '", "error");';
+                    echo '</script>';
+                }
 
-        } elseif (isset($_POST['form2'])) {
-            echo "
+            } elseif (isset($_POST['form2'])) {
+                echo "
             <script>
                 Swal.fire({
                     title: 'Are you sure?',
@@ -271,8 +271,8 @@ $_SESSION['copid'] = $copid;
                 });
             </script>
             ";
-        }
-        
+            }
+
         }
 
         function uploadCompanyLogo()
@@ -302,8 +302,9 @@ $_SESSION['copid'] = $copid;
                             Company
                         </a>
                         <form action="" method="post">
-    <input type="hidden" name="form2">
-                        <button type="submit" class="akebd" id="deleteComp">Delete Company</button></form>
+                            <input type="hidden" name="form2">
+                            <button type="submit" class="akebd" id="deleteComp">Delete Company</button>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -313,7 +314,7 @@ $_SESSION['copid'] = $copid;
 
 
 
-       
+
 
 
 
@@ -325,7 +326,7 @@ $_SESSION['copid'] = $copid;
         <div id="editModal" class="modalBlock">
             <div class="modal-edit">
                 <form class="editForm" action="" method="post" enctype="multipart/form-data">
-                <input type="hidden" name="form1">
+                    <input type="hidden" name="form1">
                     <div class="editTop" style="display: flex; justify-content: space-between;">
                         <h3>Edit
                             <?php echo $companyName ?>'s Details
@@ -366,33 +367,34 @@ $_SESSION['copid'] = $copid;
 
         <div id="viewModal" class="modalBlock">
             <div class="modal-edit">
-                
-                    <div class="editTop" style="display: flex; justify-content: space-between;">
-                        <h3><?php echo $companyName ?>'s Details
-                        </h3>
-                        <span class="closeViewM" style="cursor: pointer; color: #006BB9;">&times;</span>
-                    </div>
-                    <?php
-                    $selectLogo = mysqli_query($conn, "SELECT * FROM company_registration WHERE company_id='$selectedCompanyID'");
-                    if (mysqli_num_rows($selectLogo) > 0) {
-                        $row = mysqli_fetch_assoc($selectLogo);
-                        $companyLogo = $row['Company_logo'];
-                        ?>
-                        <p>Company Name:</p>
-                        <input type="text" id="company_name" name="company_name" value="<?php echo $companyName ?>" readonly
-                            required>
-                        <p>Company Description:</p>
-                        <textarea id="company_description" name="company_description" rows="8"
-                            required readonly><?php echo $row['Company_description']; ?></textarea>
-                        <p>Your Current Company Logo:</p>
 
-                        <div class="img-container">
-                            <img src="<?php if (isset($companyLogo)) {
-                                echo $companyLogo;
-                            } ?>" alt="Logo_img" height="100px" width="100px">
-                        </div>
-                    <?php } ?>
-               
+                <div class="editTop" style="display: flex; justify-content: space-between;">
+                    <h3>
+                        <?php echo $companyName ?>'s Details
+                    </h3>
+                    <span class="closeViewM" style="cursor: pointer; color: #006BB9;">&times;</span>
+                </div>
+                <?php
+                $selectLogo = mysqli_query($conn, "SELECT * FROM company_registration WHERE company_id='$selectedCompanyID'");
+                if (mysqli_num_rows($selectLogo) > 0) {
+                    $row = mysqli_fetch_assoc($selectLogo);
+                    $companyLogo = $row['Company_logo'];
+                    ?>
+                    <p>Company Name:</p>
+                    <input type="text" id="company_name" name="company_name" value="<?php echo $companyName ?>" readonly
+                        required>
+                    <p>Company Description:</p>
+                    <textarea id="company_description" name="company_description" rows="8" required
+                        readonly><?php echo $row['Company_description']; ?></textarea>
+                    <p>Your Current Company Logo:</p>
+
+                    <div class="img-container">
+                        <img src="<?php if (isset($companyLogo)) {
+                            echo $companyLogo;
+                        } ?>" alt="Logo_img" height="100px" width="100px">
+                    </div>
+                <?php } ?>
+
             </div>
         </div>
 
@@ -432,10 +434,41 @@ $_SESSION['copid'] = $copid;
                 <div class="status-badge2">Phase 2 on progress</div>
                 <div>
                     <div class="project-title">
-                       <p> <?php echo $row['Project_title']; ?></p>
+                        <p>
+                            <?php echo $row['Project_title']; ?>
+                        </p>
                     </div>
                     <div class="project-date">
-                        <?php echo date('j M Y, g:i a', strtotime($row['Project_date'])); ?>
+                        <?php
+                        date_default_timezone_set('Asia/Manila');
+
+                        $projectDate = new DateTime($row['Project_date']);
+                        $currentDate = new DateTime();
+                        $timeElapsed = $currentDate->getTimestamp() - $projectDate->getTimestamp();
+
+                        if ($timeElapsed < 60) {
+                            echo 'created Just Now';
+                        } elseif ($timeElapsed < 3600) {
+                            $minutes = floor($timeElapsed / 60);
+                            echo 'created ' . (($minutes == 1) ? '1 min ago' : $minutes . ' mins ago');
+                        } elseif ($timeElapsed < 86400) {
+                            $hours = floor($timeElapsed / 3600);
+                            echo 'created ' . (($hours == 1) ? '1 hr ago' : $hours . ' hrs ago');
+                        } elseif ($timeElapsed < 604800) {
+                            $days = floor($timeElapsed / 86400);
+                            echo 'created ' . (($days == 1) ? '1 day ago' : $days . ' days ago');
+                        } elseif ($timeElapsed < 1209600) {
+                            echo 'created 1 week ago';
+                        } elseif ($timeElapsed < 1814400) {
+                            echo 'created 2 weeks ago';
+                        } elseif ($timeElapsed < 2419200) {
+                            echo 'created 3 weeks ago';
+                        } else {
+                            echo 'created on ' . $projectDate->format('j M Y, g:i a');
+                        }
+                        ?>
+
+
                     </div>
                 </div>
             </a>
@@ -545,7 +578,7 @@ $_SESSION['copid'] = $copid;
             vmodal.style.display = "none";
             document.body.style.overflow = "visible";
         }
-        
+
         window.onclick = function (event) {
             if (event.target == modal) {
                 modal.style.display = "none";

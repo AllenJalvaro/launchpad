@@ -292,7 +292,7 @@
                 <p>Source of Income:</p>
                 <input type="text" name="source-income" required>
                 <p>Identity proof:</p>
-                <input type="file" name="proof" required>
+                <input type="file" name="proof" accept="image/*" required>
                 <p>Request documents:</p>
                 <input type="checkbox" name="reqDocs[]" id="canvas" value="Startup Model Canvas"><label for="canvas">Startup Model Canvas</label><br>
                 <input type="checkbox" name="reqDocs[]" id="video-pitch" value="Video Pitch"><label for="video-pitch">Video Pitch</label><br>
@@ -317,6 +317,12 @@
     span.onclick = function() { // close button
         modal.style.display = "none";
     }
+    // When the user clicks anywhere outside of the modal, close it
+    // window.onclick = function(event) {
+    //     if (event.target == modal) {
+    //         modal.style.display = "none";
+    //     }
+    // }
 </script>
 
 </body>

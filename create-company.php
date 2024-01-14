@@ -50,7 +50,7 @@ if ($hasCompany) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $company_name = $_POST['company_name'];
+    $company_name =  $_POST['company_name'];
     $company_description = $_POST['company_description'];
 
 
