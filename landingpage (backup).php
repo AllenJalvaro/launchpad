@@ -1,12 +1,7 @@
 <?php
     require "config.php";
 
-    $fetchPublishedProj = "SELECT * FROM published_project 
-          INNER JOIN project ON published_project.Project_ID = project.Project_ID 
-          INNER JOIN ideation_phase ON project.Project_ID = ideation_phase.Project_ID 
-          INNER JOIN company_registration ON company_registration.Company_ID = project.Company_ID 
-          GROUP BY published_project.PublishedProjectID
-          ORDER BY published_project.Published_date DESC, published_project.PublishedProjectID;";
+    $fetchPublishedProj = "SELECT * FROM published_project INNER JOIN project ON published_project.Project_ID = project.Project_ID INNER JOIN ideation_phase ON project.Project_ID = ideation_phase.Project_ID INNER JOIN company_registration ON company_registration.Company_ID = project.Company_ID WHERE published_project.PublishedProjectID";
     $pubProjs = $conn->query($fetchPublishedProj);
 ?>
 
@@ -26,13 +21,6 @@
             max-width: 1200px;
             width: 100%;
         }
-
-        .project-title {
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
     </style>
 </head>
 <body>

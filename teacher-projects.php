@@ -6,12 +6,13 @@
         exit(); 
     }
     $instructorEmail = $_SESSION["email"];
-    $query = "SELECT Instructor_fname, Instructor_ID from instructor_registration where instructor_email='$instructorEmail'";
+    $query = "SELECT * from instructor_registration where instructor_email='$instructorEmail'";
     $result = mysqli_query($conn, $query);
     $fname;
     if ($result->num_rows > 0) {
         while ($row = $result->fetch_assoc()) {
             $fname = $row['Instructor_fname'];
+            $lname = $row['Instructor_lname'];
             $instructor_Id = $row['Instructor_ID'];
         }
     }
@@ -142,7 +143,7 @@
     const lastName = "<?php echo $lname?>"; // Replace with actual last name
 
     const initials = getInitials(firstName, lastName);
-    document.getElementById("initialsAvatar6").innerText = initials;
+    document.getElementById("initialsAvatar4").innerText = initials;
     });
 
     // Function to get initials from first and last names

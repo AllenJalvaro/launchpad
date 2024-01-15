@@ -1,20 +1,41 @@
 <?php
-    require "config.php";
+require "config.php";
 
-    if (empty($_SESSION["email"])) {
-        header("Location: login.php");
-        exit(); 
-    }
-    $instructorEmail = $_SESSION["email"];
-    $query = "SELECT * FROM instructor_registration WHERE Instructor_email='$instructorEmail'";
-    $result = mysqli_query($conn, $query);
-    if ($result->num_rows > 0) {
-        while ($row = $result->fetch_assoc()) {
-            $instructor_Id = $row['Instructor_ID'];
-            $fname = $row['Instructor_fname'];
-            $lname = $row['Instructor_lname'];
-        }
-    }
+if (empty($_SESSION["email"])) {
+    header("Location: login.php");
+    exit();
+}
+
+$userEmail = $_SESSION["email"];
+$selectedCompanyID = isset($_GET['Company_id']) ? $_GET['Company_id'] : null;
+
+if (isset($userEmail)) {
+    $checkCompanyQuery = "SELECT c.*, s.Student_ID 
+                        FROM company_registration c
+                        INNER JOIN student_registration s ON c.Student_ID = s.Student_ID
+                        WHERE s.Student_email = '$userEmail'";
+} else {
+    $checkCompanyQuery = "SELECT * FROM company_registration WHERE Company_ID = '$selectedCompanyID'";
+}
+
+
+$resultCompany = mysqli_query($conn, $checkCompanyQuery);
+
+$hasCompany = mysqli_num_rows($resultCompany) > 0;
+$companyID = "";
+$companyName = "";
+$companyLogo = "";
+
+if ($hasCompany) {
+    $row = mysqli_fetch_assoc($resultCompany);
+    $companyID = $row["Company_ID"];
+    $companyName = $row["Company_name"];
+    $companyLogo = $row["Company_logo"];
+}
+// else{
+//     header("Location: index.php");
+//     exit();
+// }
 ?>
 
 <!DOCTYPE html>
@@ -146,26 +167,81 @@
                     </span>
                 </button>
             </a>
-            <a href="teacher-projects.php">
+            <a href="project-idea-checker.php">
                 <button>
                     <span>
-                        <i><img src="\launchpad\images\iconmentor.png" alt="home-logo" class="logo-ic"></i>
-                        <span>My Mentored Projects</span>
+                        <i><img src="\launchpad\images\project-checker-icon.png" alt="home-logo" class="logo-ic"></i>
+                        <span>Project Idea Checker</span>
                     </span>
                 </button>
             </a>
-            <a href="teacher-evaluation.php">
+            <a href="invitations.php">
                 <button>
                     <span>
-                        <i><img src="\launchpad\images\evaluationicon.png" alt="home-logo" class="logo-ic"></i>
-                        <span>Projects for Evaluation</span>
+                        <i><img src="\launchpad\images\invitation-icon.png" alt="home-logo" class="logo-ic"></i>
+                        <span>Invitations</span>
+                    </span>
+                </button>
+            </a>
+            <a href="investment.php">
+                <button>
+                    <span>
+                        <i><img src="\launchpad\images\iconinvestment.png" alt="home-logo" class="logo-ic"></i>
+                        <span>Investment Requests</span>
+                    </span>
+                </button>
+            </a>
+            <a href="collabprojects.php">
+                <button>
+                    <span>
+                        <i><img src="\launchpad\images\iconpuzzle.png" alt="home-logo" class="logo-ic"></i>
+                        <span>Collab Projects</span>
                     </span>
                 </button>
             </a>
             
-            
+            <p class="divider-company">YOUR COMPANY<a href="create-company.php" style="text-decoration: none;">
+
+                    <img src="\launchpad\images\join-company-icon.png" alt="Join Company Icon" width="15px"
+                        height="15px" style="margin-left: 70px;">
+
+                </a></p>
+            <?php if ($hasCompany): ?>
+                <?php foreach ($resultCompany as $row): ?>
+                    <a href="company_view.php?Company_id=<?php echo $row['Company_ID']; ?>">
+                        <button>
+                            <span class="<?php echo 'btn-company-created'; ?>">
+                                <div class="circle-avatar">
+                                    <?php if (!empty($row['Company_logo'])): ?>
+                                        <img src="\launchpad\<?php echo $row['Company_logo']; ?>" alt="Company Logo"
+                                            class="img-company">
+                                    <?php endif; ?>
+                                </div>
+                                <span class="create-company-text">
+                                    <?php echo $row['Company_name']; ?>
+                                </span>
+                            </span>
+                        </button>
+                    </a>
+                <?php endforeach; ?>
+            <?php endif; ?>
+
+
+            <!-- <p class="divider-company">COMPANIES YOU'VE JOINED</p>
+            <a href="#">
+                <button>
+                    <span class="btn-join-company">
+                        <i>
+                            <div class="circle-avatar">
+                                <img src="\launchpad\images\join-company-icon.png" alt="">
+                            </div>
+                        </i>
+                        <span class="join-company-text">Join companies</span>
+                    </span>
+                </button>
+            </a> -->
             <br><br>
-            <a href="teacher-profile.php" style="position: fixed; bottom: 0; background-color: white;">
+            <a href="profile.php" style="position: fixed; bottom: 0; background-color: white;">
                 <button>
                     <span>
                         <div class="avatar2" id="initialsAvatar4"></div>

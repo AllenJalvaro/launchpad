@@ -6,17 +6,17 @@
         exit(); 
     }
     $instructorEmail = $_SESSION["email"];
-    $query = "SELECT * from instructor_registration where instructor_email='$instructorEmail'";
+    $query = "SELECT Instructor_fname, Instructor_ID from instructor_registration where instructor_email='$instructorEmail'";
     $result = mysqli_query($conn, $query);
     $fname;
     if ($result->num_rows > 0) {
         while ($row = $result->fetch_assoc()) {
             $fname = $row['Instructor_fname'];
-            $lname = $row['Instructor_lname'];
             $instructor_Id = $row['Instructor_ID'];
         }
     }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -25,7 +25,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/navbar.css">
     <link rel="stylesheet" href="css/company.css">
-    <title>Evaluation</title>
+    <title>Mentored Project</title>
     <link rel="icon" href="/launchpad/images/favicon.svg" />
 </head>
 <body>
@@ -43,7 +43,7 @@
                     </span>
                 </button>
             </a>
-            <a href="teacher-projects.php">
+            <a href="teacher-projects.php" class="active">
                 <button>
                     <span>
                         <i><img src="\launchpad\images\iconmentor.png" alt="home-logo" class="logo-ic"></i>
@@ -51,7 +51,7 @@
                     </span>
                 </button>
             </a>
-            <a href="teacher-evaluation.php" class="active">
+            <a href="teacher-evaluation.php">
                 <button>
                     <span>
                         <i><img src="\launchpad\images\evaluationicon.png" alt="home-logo" class="logo-ic"></i>
@@ -77,14 +77,14 @@
     </aside>
 
     <?php
-        $select_evaluator_project = mysqli_query($conn, "SELECT project.Project_ID, company_registration.Company_name, project.Project_title, project.Project_date
+        $select_mentor_project = mysqli_query($conn, "SELECT project.Project_ID, company_registration.Company_name, project.Project_title, project.Project_date
         FROM project
-        INNER JOIN project_evaluator ON project.Project_ID = project_evaluator.project_id
+        INNER JOIN project_mentor ON project.Project_ID = project_mentor.Project_ID
         INNER JOIN company_registration ON project.Company_ID = company_registration.Company_ID
-        WHERE project_evaluator.evaluator_id = $instructor_Id");
+        WHERE project_mentor.Mentor_ID = $instructor_Id");
 
                 
-        if (mysqli_num_rows($select_evaluator_project) > 0 ) {
+        if (mysqli_num_rows($select_mentor_project) > 0 ) {
         }        
 
     ?>
@@ -96,8 +96,8 @@
         </div>
     <div class="content">
 
-    <?php while ($row = mysqli_fetch_assoc($select_evaluator_project)) : ?>
-    <a href="evaluator_projectView.php?project_id=<?php echo $row['Project_ID']; ?>" class="project-card">
+    <?php while ($row = mysqli_fetch_assoc($select_mentor_project)) : ?>
+    <a href="teacher_projectView.php?project_id=<?php echo $row['Project_ID']; ?>" class="project-card">
     <div class="status-badge">Company: <?php echo $row['Company_name'] ?></div>
     <div>
     <div class="project-title"><?php echo $row['Project_title']; ?></div>
@@ -142,7 +142,7 @@
     const lastName = "<?php echo $lname?>"; // Replace with actual last name
 
     const initials = getInitials(firstName, lastName);
-    document.getElementById("initialsAvatar4").innerText = initials;
+    document.getElementById("initialsAvatar6").innerText = initials;
     });
 
     // Function to get initials from first and last names

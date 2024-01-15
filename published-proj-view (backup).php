@@ -41,9 +41,6 @@
         <link rel="stylesheet" href="css/landingpage.css">
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-        <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-        <script src="//cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <style>
         .container {
             max-width: 1200px;
@@ -226,9 +223,6 @@
         </nav>
 
         <div class="viewed-project">
-        <a href="landingpage.php" style="text-decoration:none; color:#006BB9;" title="Back">
-            <i class="fas fa-angle-left" style="font-size: 40px;"></i>
-        </a>
             <p class="vdate"><?php echo date("F j, Y", strtotime($projPubDate));?></p>
             <div class="top-content">
                 <h1 class="vtitle"><?php echo $projTitle; ?></h1>
@@ -268,16 +262,7 @@
                         $sql = "INSERT INTO investor_request (PublishedProjectID, InvestorName, Email, SourceofIncome, IdentityProof, RequestedDocuments, Submission_date) 
                                 VALUES ('$viewedProj', '$inverstorName', '$investorEmail', '$sourceIncome', '$targetFilePath', '$reqDocuments $otherDocs', NOW())";
                         if ($conn->query($sql) === TRUE) {
-                            // echo "<script> alert('Requested successfully!'); </script>";
-                            echo "<script>
-                                Swal.fire({
-                                    title: 'Request submitted successfully!',
-                                    text: '',
-                                    icon: 'success',
-                                    showConfirmButton: true,
-                                });
-                            </script>";
-                            
+                            echo "<script> alert('Requested successfully!'); </script>";
                         } else {
                             echo "Error: " . $sql . "<br>" . $conn->error;
                         }

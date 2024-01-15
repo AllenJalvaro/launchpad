@@ -32,10 +32,37 @@ if ($hasCompany) {
     $companyName = $row["Company_name"];
     $companyLogo = $row["Company_logo"];
 }
-// else{
-//     header("Location: index.php");
-//     exit();
-// }
+
+
+
+$viewedProj = isset($_GET['project_id']) ? $_GET['project_id'] : null;
+
+    if ($viewedProj == null)  {
+        header("Location: index.php");
+    }
+
+    $fetchPubProj = "SELECT * FROM published_project INNER JOIN project ON published_project.Project_ID = project.Project_ID INNER JOIN ideation_phase ON ideation_phase.Project_ID = published_project.Project_ID INNER JOIN company_registration ON project.Company_ID = company_registration.Company_ID WHERE published_project.PublishedProjectID = '$viewedProj'";
+
+    $resultProj = mysqli_query($conn, $fetchPubProj);
+
+    $hasProj = mysqli_num_rows($resultProj) > 0;
+    $projPubDate = "";  
+    $projTitle = "";
+    $projLogo = "";
+    $projCat = "";
+    $projDesc = "";
+    $compName = "";
+    $compLogo = "";
+
+    if ($hasProj) {
+        $row = mysqli_fetch_assoc($resultProj); 
+        $projPubDate = $row['Published_date'];
+        $projTitle = $row['Project_title'];
+        $projLogo = $row['Project_logo'];
+        $projDesc = $row['Project_Description'];
+        $compName = $row['Company_name'];
+        $compLogo = $row['Company_logo'];
+    }
 ?>
 
 <!DOCTYPE html>
@@ -49,52 +76,12 @@ if ($hasCompany) {
     <link rel="stylesheet" href="css/navbar.css">
     <title>Home - Launchpad</title>
     <link rel="icon" href="/launchpad/images/favicon.svg" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <style>
-        .logo {
-            width: 200px;
-            height: auto;
-            display: block;
-            margin: 20px auto;
-        }
-
-        .project-card:hover {
-            box-shadow: 0 0 15px rgba(3, 33, 81, 0.402);
-        }
-
-        .content2 {
-            margin-top: 30px;
-            margin-left: 300px;
-        }
-
         .content {
             margin-top: 20px;
             margin-left: 270px;
-            padding: 20px;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-        }
-
-        .project-card:active {
-            transform: scale(0.98);
-            box-shadow: none;
-        }
-
-        .project-card {
-            position: relative;
-            margin: 0;
-            flex: 0 0 calc(33.33% - 20px);
-            max-width: calc(33.33% - 20px);
-            box-sizing: border-box;
-            padding: 15px;
-            border: 1px solid #ddd;
-            border-radius: 20px;
-            background-color: #fff;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s, box-shadow 0.3s;
-            cursor: pointer;
-            text-decoration: none;
-            color: #333;
+            padding: 20px 60px;
         }
 
         .container {
@@ -128,32 +115,36 @@ if ($hasCompany) {
             display: block;
             margin: 20px auto;
         }
+        .top-content {
+            display: flex;
+            justify-content: space-between;
+        }
 
-        .profile-info {
+        .top-content img {
+            width: 45px;
+            height: 45px;
+            border-radius: 100px;
+        }
+
+        .top-content .right {
             display: flex;
             align-items: center;
         }
-
-        .profile-circle img {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            overflow: hidden;
+        .top-content .right h3 {
+            font-size: 18px;
+            margin-top: 8px;
             margin-right: 10px;
-            box-shadow: 0 0 15px rgba(3, 33, 81, 0.202);
         }
-
-        .profile {
+        .viewed-project .vimg {
             width: 100%;
-            height: 100%;
+            min-height: 300px;
+            max-height: 300px;
             object-fit: cover;
+            border-radius: 30px;
         }
-
-        .project-card:hover {
-            box-shadow: 0 0 15px rgba(3, 33, 81, 0.402);
-        }
-        .proj-desc {
-            margin: 10px 0;
+        .viewed-project .vdesc {
+            margin: 20px 0;
+            font-size: 17px;
         }
     </style>
 </head>
@@ -165,7 +156,7 @@ if ($hasCompany) {
         </header>
 
         <nav>
-            <a href="#" class="active">
+            <a href="index.php" class="active">
                 <button>
                     <span>
                         <i><img src="\launchpad\images\home-icon.png" alt="home-logo" class="logo-ic"></i>
@@ -265,65 +256,28 @@ if ($hasCompany) {
         }
     }
     ?>
-    <div class="content2">
-        <br>
-        <h1>
-            Latest Projects
-        </h1>
-    </div>
 
     <div class="content">
-        <?php
+    <div class="viewed-project">
+    <a href="index.php"
+                            style="text-decoration:none; color:#006BB9;" title="Back"><i class="fas fa-angle-left"
+                                style="font-size: 40px;"></i>
 
-$query = "SELECT * FROM published_project 
-          INNER JOIN project ON published_project.Project_ID = project.Project_ID 
-          INNER JOIN ideation_phase ON project.Project_ID = ideation_phase.Project_ID 
-          INNER JOIN company_registration ON company_registration.Company_ID = project.Company_ID 
-          GROUP BY published_project.PublishedProjectID
-          ORDER BY published_project.Published_date DESC, published_project.PublishedProjectID;";
+                        </a>
+            <p class="vdate"><?php echo date("F j, Y", strtotime($projPubDate));?></p>
+            <div class="top-content">
+                <h1 class="vtitle"><?php echo $projTitle; ?></h1>
+                <div class="right">
+                    <h3 class="vcompName"><?php echo $compName; ?></h3>
+                    <img class="vcompImg" src="<?php echo $compLogo; ?>" alt="">
+                </div>
+            </div>
+            <p class="vcategory"></p>
 
-
-
-        $result = $conn->query($query);
-
-        if ($result->num_rows > 0) {
-            while ($row = mysqli_fetch_array($result)) {
-                $projectLogo = $row['Project_logo'];
-                $projectTitle = $row['Project_title'];
-                $publishedDate = $row['Published_date'];
-                $projectDescription = $row['Project_Description'];
-                $companyLogo = $row['Company_logo'];
-                $companyName = $row['Company_name'];
-
-              
-                $cutDescription = implode(' ', array_slice(str_word_count($projectDescription, 2), 0, 20));
-
-                echo '<a class="project-card" href="latest_proj_view.php?project_id=' . $row['PublishedProjectID'] . '">';
-                echo '<div >';
-                echo '<div class="container">';
-                echo '<img src="' . $projectLogo . '" class="logo">';
-                echo '<h1>' . $projectTitle . '</h1>';
-                echo '<p>' . $publishedDate . '</p>';
-                echo '<p class="proj-desc">' . $cutDescription . '...</p>';
-                echo '<div class="profile-info">';
-                echo '<div class="profile-circle">';
-                echo '<img src="' . $companyLogo . '">';
-                echo '</div>';
-                echo '<p>Company Name: ' . $companyName . '</p>';
-                echo '</div>';
-                echo '</div>';
-                echo '</div>';
-                echo '</a>';
-            }
-        } else {
-            echo "No records found";
-        }
-
-        $conn->close();
-
-        ?>
-
-
+            <img src="<?php echo $projLogo; ?>" alt="" class="vimg">
+            <p class="vdesc"><?php echo $projDesc; ?></p>
+                
+        </div>
     </div>
     <script>
         // JavaScript to set the initials

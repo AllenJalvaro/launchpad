@@ -8,8 +8,8 @@ if (isset($_POST["searchTerm"])) {
     $resultSearch = mysqli_query($conn, $searchQuery);
 
     if (mysqli_num_rows($resultSearch) > 0) {
+        echo '<div class="row">';
         while ($row = mysqli_fetch_assoc($resultSearch)) {
-            echo '<div class="row">';
             echo '<a class="col-md-4" href="published-proj-view.php?project_id=' . $row['PublishedProjectID'] . '">';
             echo '<div class="project-card">';
             echo '<img src="' . $row['Project_logo'] . '" alt="Project Image" class="project-img">';       
@@ -28,13 +28,12 @@ if (isset($_POST["searchTerm"])) {
             echo '</div>';
             echo '</div>';
             echo '</a>';
-            echo '</div>';
         }
+        echo '</div>';
     } else {
         echo '<p>No project found.</p>';
     }
 } else {
-    // Handle the case where no search term is provided
     echo "No search term provided.";
 }
 ?>
