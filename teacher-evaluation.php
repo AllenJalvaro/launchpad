@@ -81,27 +81,58 @@
         FROM project
         INNER JOIN project_evaluator ON project.Project_ID = project_evaluator.project_id
         INNER JOIN company_registration ON project.Company_ID = company_registration.Company_ID
-        WHERE project_evaluator.evaluator_id = $instructor_Id");
+        WHERE project_evaluator.evaluator_id = $instructor_Id ORDER BY project.Project_date DESC");
 
                 
         if (mysqli_num_rows($select_evaluator_project) > 0 ) {
         }        
 
     ?>
-    <div class="content2">
+    <!-- <div class="content2">
                         
     <div class="search-bar">
     <input type="text" id="projectSearch" name="projectSearch" placeholder="Search any <?php echo $fname ?>'s projects"><span class="forspace"></span><span> <a href="#"><img src="images/options.png" alt="options-icon" height="30px"></a></span> 
     </div>
-        </div>
+        </div> -->
     <div class="content">
 
     <?php while ($row = mysqli_fetch_assoc($select_evaluator_project)) : ?>
     <a href="evaluator_projectView.php?project_id=<?php echo $row['Project_ID']; ?>" class="project-card">
-    <div class="status-badge">Company: <?php echo $row['Company_name'] ?></div>
+    <div class="status-badge"><?php echo $row['Company_name'] ?></div>
     <div>
     <div class="project-title"><?php echo $row['Project_title']; ?></div>
-    <div class="project-date">Date created: <?php echo date('m-d-y g:i A', strtotime($row['Project_date'])); ?></div>
+    <div class="project-date">
+        <?php
+        
+        date_default_timezone_set('Asia/Manila');
+
+        $projectDate = new DateTime($row['Project_date']);
+        $currentDate = new DateTime();
+        $timeElapsed = $currentDate->getTimestamp() - $projectDate->getTimestamp();
+
+        if ($timeElapsed < 60) {
+            echo 'created Just Now';
+        } elseif ($timeElapsed < 3600) {
+            $minutes = floor($timeElapsed / 60);
+            echo 'created ' . (($minutes == 1) ? '1 min ago' : $minutes . ' mins ago');
+        } elseif ($timeElapsed < 86400) {
+            $hours = floor($timeElapsed / 3600);
+            echo 'created ' . (($hours == 1) ? '1 hr ago' : $hours . ' hrs ago');
+        } elseif ($timeElapsed < 604800) {
+            $days = floor($timeElapsed / 86400);
+            echo 'created ' . (($days == 1) ? '1 day ago' : $days . ' days ago');
+        } elseif ($timeElapsed < 1209600) {
+            echo 'created 1 week ago';
+        } elseif ($timeElapsed < 1814400) {
+            echo 'created 2 weeks ago';
+        } elseif ($timeElapsed < 2419200) {
+            echo 'created 3 weeks ago';
+        } else {
+            echo 'created on ' . $projectDate->format('j M Y, g:i a');
+        }
+        
+        
+        ?></div>
     </div>
     </a>
     <?php endwhile; ?>
