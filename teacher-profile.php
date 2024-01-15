@@ -83,7 +83,7 @@
     <div class="content">        
         <div class="profile-card">
         <header>
-            <h1>Hello, <?php echo $fname?>!</h1><br>
+            <h1>Hello, Instructor <b> <?php echo $fname?><b>!</h1><br>
             
         </header>
 
