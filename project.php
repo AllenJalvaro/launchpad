@@ -1781,14 +1781,7 @@ if (isset($logo_ideation)) {
                                                                     title="This will save your project. Easily return to your work later without losing progress.">Save Ideation Phase</button>
                                                             </div>
 
-                                                            <div
-                                                                style="display: flex; justify-content: space-between; align-items: center; width: 100%; margin-top: 10px;">
-                                                                <button class="evalBtn" name="evalBtn"
-                                                                    style="width:100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;border-radius:20px; padding: 20px; font-weight: bold;"
-                                                                    title="You can only submit to evaluators when this phase is already approved by your mentor."
-                                                                    disabled>Submit Ideation Phase
-                                                                    to Evaluators</button>
-                                                            </div>
+                                                           
 
 
                                                         </form><br>
@@ -1882,36 +1875,65 @@ if (isset($logo_ideation)) {
                                                                                                             onclick="cancelVideoUpdate()">Cancel</a>
                                                                                                     </div>
                                                                                                     <div class="feedbackTitle"><i class="fas fa-caret-down"></i> Feedbacks</div>
+<!-- pitchdeck to -->
+<div class="feedbackSection">
 
-                                                <div class="feedbackSection">
+<?php
+ $select_comment_videopitch = mysqli_query($conn, "SELECT * FROM instructor_registration INNER JOIN comment_pitching_videopitch ON instructor_registration.Instructor_ID = comment_pitching_videopitch.instructor_ID INNER JOIN pitching_phase ON pitching_phase.PitchingID = comment_pitching_videopitch.pitchingID INNER JOIN project ON project.Project_ID = pitching_phase.Project_ID WHERE project.Project_ID = '$project_id' AND pitching_phase.PitchingID = comment_pitching_videopitch.pitchingID ORDER BY comment_pitching_videopitch.comment_date DESC;");
 
-                                                    <div class="feedbackBlock">
+ if (mysqli_num_rows($select_comment_videopitch) > 0) {
+     while ($row = mysqli_fetch_assoc($select_comment_videopitch)) {
+         $fetch_comment_videopitch = $row['comment_videopitch'];
+         $fetch_mentor_name = $row['Instructor_fname'].' '.$row['Instructor_lname'];
+         date_default_timezone_set('Asia/Manila');
 
-                                                        <div class="feedback-info">
-                                                            <span class="commenter">Moniqua Lee</span>
-                                                            <span class="feedbackdate">(Mentor) • 1hr ago</span>
-                                                        </div>
-                                                        <p class="feedbackContent">
-                                                            consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum
-                                                            dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident,
-                                                            sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-                                                    </div>
-                                                    <div class="feedbackBlock">
+         $fetch_commentdate = new DateTime($row['comment_date']);
+         $currentDate = new DateTime();
+         $timeElapsed = $currentDate->getTimestamp() - $fetch_commentdate->getTimestamp();
 
-                                                        <div class="feedback-info">
-                                                            <span class="commenter">Sam Brown</span>
-                                                            <span class="feedbackdate">(Evaluator) • 3 days ago</span>
-                                                        </div>
-                                                        <p class="feedbackContent">
-                                                            veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex non
-                                                            proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-                                                    </div>
-                                                </div>
+         if ($timeElapsed < 60) {
+             $fetch_commentdate = 'Just now';
+         } elseif ($timeElapsed < 3600) {
+             $minutes = floor($timeElapsed / 60);
+             $fetch_commentdate = ($minutes == 1) ? '1 min ago' : $minutes . ' mins ago';
+         } elseif ($timeElapsed < 86400) {
+             $hours = floor($timeElapsed / 3600);
+             $fetch_commentdate = ($hours == 1) ? '1 hr ago' : $hours . ' hrs ago';
+         } elseif ($timeElapsed < 604800) {
+             $days = floor($timeElapsed / 86400);
+             $fetch_commentdate = ($days == 1) ? '1 day ago' : $days . ' days ago';
+         } elseif ($timeElapsed < 1209600) {
+             $fetch_commentdate = '1 week ago';
+         } elseif ($timeElapsed < 1814400) {
+             $fetch_commentdate = '2 weeks ago';
+         } elseif ($timeElapsed < 2419200) {
+             $fetch_commentdate = '3 weeks ago';
+         } else {
+             $fetch_commentdate = $fetch_commentdate->format('j M Y, g:i a');
+         }
+?>
 
+                                                                                                           
 
+                                                                                                                <div class="feedbackBlock">
 
-
-                                                                                                </div>
+                                                                                                                    <div class="feedback-info">
+                                                                                                                        <span class="commenter"><?php echo $fetch_mentor_name;?></span>
+                                                                                                                        <span class="feedbackdate"> • <?php echo $fetch_commentdate;?></span>
+                                                                                                                    </div>
+                                                                                                                    <p class="feedbackContent">
+                                                                                                                    <?php echo $fetch_comment_videopitch?>
+                                                                                                                    </p>
+                                                                                                                
+                                                                                                            </div> <!-- end of feedbackSection -->
+                                        <?php
+     }}
+                                        ?> </div></div>   
+                                        
+                                    
+                                    
+                                    </div>                                                    
+  
 
 
 
@@ -1984,31 +2006,61 @@ if (isset($logo_ideation)) {
 
                                                                                                 <div class="feedbackTitle"><i class="fas fa-caret-down"></i> Feedbacks</div>
 
-                                                                                                    <div class="feedbackSection">
 
-                                                                                                        <div class="feedbackBlock">
+                                                                                                <!-- videopitch -->
+                                                                                                <div class="feedbackSection">
 
-                                                                                                            <div class="feedback-info">
-                                                                                                                <span class="commenter">Moniqua Lee</span>
-                                                                                                                <span class="feedbackdate">(Mentor) • 1hr ago</span>
-                                                                                                            </div>
-                                                                                                            <p class="feedbackContent">
-                                                                                                                consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum
-                                                                                                                dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident,
-                                                                                                                sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-                                                                                                        </div>
-                                                                                                        <div class="feedbackBlock">
+<?php
+ $select_comment_overview = mysqli_query($conn, "SELECT * FROM instructor_registration INNER JOIN comment_pitching_pitchdeck ON instructor_registration.Instructor_ID = comment_pitching_pitchdeck.instructor_ID INNER JOIN pitching_phase ON pitching_phase.PitchingID = comment_pitching_pitchdeck.pitchingID INNER JOIN project ON project.Project_ID = pitching_phase.Project_ID WHERE project.Project_ID = '$project_id' AND pitching_phase.PitchingID = comment_pitching_pitchdeck.pitchingID ORDER BY comment_pitching_pitchdeck.comment_date DESC;");
 
-                                                                                                            <div class="feedback-info">
-                                                                                                                <span class="commenter">Sam Brown</span>
-                                                                                                                <span class="feedbackdate">(Evaluator) • 3 days ago</span>
-                                                                                                            </div>
-                                                                                                            <p class="feedbackContent">
-                                                                                                                veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex non
-                                                                                                                proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-                                                                                                        </div>
-                                                                                                    </div>
-                                                                                                </div>                                                                        
+ if (mysqli_num_rows($select_comment_overview) > 0) {
+     while ($row = mysqli_fetch_assoc($select_comment_overview)) {
+         $fetch_comment_overview = $row['comment_pitchdeck'];
+         $fetch_mentor_name = $row['Instructor_fname'].' '.$row['Instructor_lname'];
+         date_default_timezone_set('Asia/Manila');
+
+         $fetch_commentdate = new DateTime($row['comment_date']);
+         $currentDate = new DateTime();
+         $timeElapsed = $currentDate->getTimestamp() - $fetch_commentdate->getTimestamp();
+
+         if ($timeElapsed < 60) {
+             $fetch_commentdate = 'Just now';
+         } elseif ($timeElapsed < 3600) {
+             $minutes = floor($timeElapsed / 60);
+             $fetch_commentdate = ($minutes == 1) ? '1 min ago' : $minutes . ' mins ago';
+         } elseif ($timeElapsed < 86400) {
+             $hours = floor($timeElapsed / 3600);
+             $fetch_commentdate = ($hours == 1) ? '1 hr ago' : $hours . ' hrs ago';
+         } elseif ($timeElapsed < 604800) {
+             $days = floor($timeElapsed / 86400);
+             $fetch_commentdate = ($days == 1) ? '1 day ago' : $days . ' days ago';
+         } elseif ($timeElapsed < 1209600) {
+             $fetch_commentdate = '1 week ago';
+         } elseif ($timeElapsed < 1814400) {
+             $fetch_commentdate = '2 weeks ago';
+         } elseif ($timeElapsed < 2419200) {
+             $fetch_commentdate = '3 weeks ago';
+         } else {
+             $fetch_commentdate = $fetch_commentdate->format('j M Y, g:i a');
+         }
+?>
+
+                                                                                                           
+
+                                                                                                                <div class="feedbackBlock">
+
+                                                                                                                    <div class="feedback-info">
+                                                                                                                        <span class="commenter"><?php echo $fetch_mentor_name;?></span>
+                                                                                                                        <span class="feedbackdate"> • <?php echo $fetch_commentdate;?></span>
+                                                                                                                    </div>
+                                                                                                                    <p class="feedbackContent">
+                                                                                                                    <?php echo $fetch_comment_overview;?>
+                                                                                                                    </p>
+                                                                                                                
+                                                                                                            </div> <!-- end of feedbackSection -->
+                                        <?php
+     }}
+                                        ?> </div>                                                                                  
 
 
 
@@ -2071,30 +2123,7 @@ if (isset($logo_ideation)) {
                                                                                                     </div>
                                                                                                     <div class="feedbackTitle"><i class="fas fa-caret-down"></i> Feedbacks</div>
 
-                                                <div class="feedbackSection">
-
-                                                    <div class="feedbackBlock">
-
-                                                        <div class="feedback-info">
-                                                            <span class="commenter">Moniqua Lee</span>
-                                                            <span class="feedbackdate">(Mentor) • 1hr ago</span>
-                                                        </div>
-                                                        <p class="feedbackContent">
-                                                            consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum
-                                                            dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident,
-                                                            sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-                                                    </div>
-                                                    <div class="feedbackBlock">
-
-                                                        <div class="feedback-info">
-                                                            <span class="commenter">Sam Brown</span>
-                                                            <span class="feedbackdate">(Evaluator) • 3 days ago</span>
-                                                        </div>
-                                                        <p class="feedbackContent">
-                                                            veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex non
-                                                            proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-                                                    </div>
-                                                </div>
+                                          
 
 
 
@@ -2158,30 +2187,7 @@ if (isset($logo_ideation)) {
 
                                                                                                 <div class="feedbackTitle"><i class="fas fa-caret-down"></i> Feedbacks</div>
 
-                                                                                                    <div class="feedbackSection">
-
-                                                                                                        <div class="feedbackBlock">
-
-                                                                                                            <div class="feedback-info">
-                                                                                                                <span class="commenter">Moniqua Lee</span>
-                                                                                                                <span class="feedbackdate">(Mentor) • 1hr ago</span>
-                                                                                                            </div>
-                                                                                                            <p class="feedbackContent">
-                                                                                                                consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum
-                                                                                                                dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident,
-                                                                                                                sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-                                                                                                        </div>
-                                                                                                        <div class="feedbackBlock">
-
-                                                                                                            <div class="feedback-info">
-                                                                                                                <span class="commenter">Sam Brown</span>
-                                                                                                                <span class="feedbackdate">(Evaluator) • 3 days ago</span>
-                                                                                                            </div>
-                                                                                                            <p class="feedbackContent">
-                                                                                                                veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex non
-                                                                                                                proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-                                                                                                        </div>
-                                                                                                    </div>
+                                                                                                    
                                                                                                 </div>
 
 
@@ -2202,15 +2208,7 @@ if (isset($logo_ideation)) {
                                                                 title="This will save your project. Easily return to your work later without losing progress.">Save Pitching Phase</button>
                                                         </div>
 
-                                                        <div
-                                                            style="display: flex; justify-content: space-between; align-items: center; width: 100%; margin-top: 10px;">
-                                                            <button class="evalBtn" name="evalBtn"
-                                                                style="width:100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;border-radius:20px; padding: 20px; font-weight: bold;"
-                                                                title="You can only submit to evaluators when this phase is already approved by your mentor."
-                                                                disabled>Submit Pitching Phase
-                                                                to Evaluators</button>
                                                       
-                                                        </div>
 
                                                         </form>
                                                         <br>
@@ -2289,14 +2287,7 @@ if (isset($logo_ideation)) {
                                                                 style="width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; border-radius:20px; padding: 20px; font-weight: bold;">Go Public</button>
                                                         </div>
 
-                                                        <div
-                                                            style="display: flex; justify-content: space-between; align-items: center; width: 100%; margin-top: 10px;">
-                                                            <button class="btnPrivate" name="btnPrivate"
-                                                                style="width:100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;border-radius:20px; padding: 20px; font-weight: bold;"
-                                                                title="You can only submit to evaluators when this phase is already approved by your mentor."
-                                                                disabled>Keep Private</button>
-                                                      
-                                                        </div>
+                                                     
                                                                                            
 
                                                                                             </div>

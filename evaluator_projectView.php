@@ -504,16 +504,53 @@ textarea::-webkit-scrollbar-track {
 
     <?php
 
-
-
-    if (isset($_POST['btnApprove'])) {
-
-        $updateEvaluatorStatus = "UPDATE `project_evaluator` SET `status`='APPROVED' WHERE evaluator_id='35' and project_evaluator.project_id='132';";
-       
-
-
-
+   
+if (isset($_POST['btnApprove'])) {
+    $selectEvaluatorID = mysqli_query($conn, "SELECT Instructor_ID from instructor_registration where instructor_registration.Instructor_email = '{$userEmail}' LIMIT 1;");
+    
+    if (mysqli_num_rows($selectEvaluatorID) > 0) {
+        $row = mysqli_fetch_assoc($selectEvaluatorID);
+        $evaluator_ID = $row['Instructor_ID'];
     }
+
+    $updateEvaluatorStatus = mysqli_query($conn, "UPDATE `project_evaluator` SET `status`='APPROVED' WHERE evaluator_id='{$evaluator_ID}' and project_evaluator.project_id='{$project_id}';");
+
+    $ProceedPhase2 = mysqli_query($conn, "SELECT COUNT(project_evaluator.status) as numOfApproval FROM project_evaluator WHERE project_evaluator.project_id='132' and project_evaluator.status='APPROVED';");
+
+    if (mysqli_num_rows($ProceedPhase2) > 0) {
+        $row = mysqli_fetch_assoc($ProceedPhase2);
+        $numOfApproval = $row['numOfApproval']; // Corrected variable name
+    }
+
+    if (isset($numOfApproval) && $numOfApproval == 1) {
+        echo "<script>
+                Swal.fire({
+                    text: 'You are the first evaluator who approved this project\'s ideation phase.',
+                    icon: 'success',
+                    showConfirmButton: true
+                });
+              </script>";
+    } else if (isset($numOfApproval) && $numOfApproval == 2) {
+        $updateEvaluatorStatus = mysqli_query($conn, "UPDATE `ideation_phase` SET `status`='APPROVED' WHERE project_id='{$project_id}';");
+        echo "<script>
+                Swal.fire({
+                    text: 'You are the second evaluator who approved this project\'s ideation phase. And this project can now proceed to the Pitching phase.',
+                    icon: 'success',
+                    showConfirmButton: true
+                });
+              </script>";
+    } else if (isset($numOfApproval) && $numOfApproval > 1) {
+        $updateEvaluatorStatus = mysqli_query($conn, "UPDATE `ideation_phase` SET `status`='APPROVED' WHERE project_id='{$project_id}';");
+        echo "<script>
+                Swal.fire({
+                    text: 'You are the last evaluator who approved this project\'s ideation phase. And this project can now proceed to the Pitching phase.',
+                    icon: 'success',
+                    showConfirmButton: true
+                });
+              </script>";
+    }
+}
+
  
   
     //save PITCHING PHASE
@@ -1649,13 +1686,8 @@ if (isset($_POST['btnCommentModel'])) {
                                                                 }
 
                                                                 ?>
-
+                                                   
                                                            
-                                                                <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
-                                                                    <button class="saveBtn" name="btnApprove"
-                                                                        style="width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; border-radius:20px; padding: 20px; font-weight: bold;"
-                                                                        title="This will save your project. Easily return to your work later without losing progress.">Approve Project's Ideation Phase - Proceed to Pitching Phase</button>
-                                                                </div>
 
                                                                 <div
                                                                     style="display: flex; justify-content: space-between; align-items: center; width: 100%; margin-top: 10px;">
@@ -1664,6 +1696,15 @@ if (isset($_POST['btnCommentModel'])) {
 
 
                                                             </form>
+                                                            <br>
+                                                            <form action="" method="POST">
+
+<div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+    <button type="submit" class="saveBtn" name="btnApprove"
+        style="width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; border-radius:20px; padding: 20px; font-weight: bold;">Approve Project's Ideation Phase - Proceed to Pitching Phase</button>
+</div>
+<br>
+</form>
                                                             <a href="#" style="font-size: 15px; text-decoration: none; color: inherit;" onmouseover="this.style.color='#107cce'" onmouseout="this.style.color=''">
             Back to Top
           </a>
@@ -2071,7 +2112,7 @@ if (isset($_POST['btnCommentModel'])) {
                 <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
                                                                     <button class="saveBtn" name="btnSavePitch"
                                                                         style="width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; border-radius:20px; padding: 20px; font-weight: bold;"
-                                                                        title="This will save your project. Easily return to your work later without losing progress.">Save Pitching Phase</button>
+                                                                        title="This will save your project. Easily return to your work later without losing progress.">Approve the Final Project</button>
                                                                 </div>
 
                                                             <br>

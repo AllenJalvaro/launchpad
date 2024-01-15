@@ -34,7 +34,7 @@ if ($hasCompany) {
 require __DIR__ . '/vendor/autoload.php';
 use Orhanerday\OpenAi\OpenAi;
 
-$open_ai_key = "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";
+$open_ai_key = "";
 $open_ai = new OpenAi($open_ai_key);
 $projectTitle;
 $response;
@@ -91,7 +91,7 @@ if (isset($_POST['submitG'])) {
     Startup Project Description: $projectDesc
     EOT,
         'temperature' => 0.9,
-        'max_tokens' => 1000,
+        'max_tokens' => 2000,
         'frequency_penalty' => 0,
         'presence_penalty' => 0.6,
     ]);
@@ -126,7 +126,7 @@ if (isset($_POST['submitG'])) {
                         List down 10 existing concepts/systems, with website links, that are similar to the idea of $projectTitle : $projectDesc
                         EOT,
                         'temperature' => 0.9,
-                        'max_tokens' => 1000,
+                        'max_tokens' => 2000,
                         'frequency_penalty' => 0,
                         'presence_penalty' => 0.6,
                     ]);
@@ -149,7 +149,7 @@ if (isset($_POST['submitG'])) {
                         List down 10 existing concepts/systems, with website links, that are similar to the idea of $projectTitle : $projectDesc
                         EOT,
                         'temperature' => 0.9,
-                        'max_tokens' => 1000,
+                        'max_tokens' => 2000,
                         'frequency_penalty' => 0,
                         'presence_penalty' => 0.6,
                     ]);
@@ -172,7 +172,7 @@ if (isset($_POST['submitG'])) {
                         Recommend 10 much better and proper titles for $projectTitle
                         EOT,
                         'temperature' => 0.9,
-                        'max_tokens' => 1000,
+                        'max_tokens' => 2000,
                         'frequency_penalty' => 0,
                         'presence_penalty' => 0.6,
                     ]);
@@ -195,7 +195,7 @@ if (isset($_POST['submitG'])) {
                         List down 10 much better and proper titles for $projectTitle
                         EOT,
                         'temperature' => 0.9,
-                        'max_tokens' => 1000,
+                        'max_tokens' => 2000,
                         'frequency_penalty' => 0,
                         'presence_penalty' => 0.6,
                     ]);
@@ -218,7 +218,7 @@ if (isset($_POST['submitG'])) {
                         List down 10 much better and proper startup project titles for $projectTitle
                         EOT,
                         'temperature' => 0.9,
-                        'max_tokens' => 1000,
+                        'max_tokens' => 2000,
                         'frequency_penalty' => 0,
                         'presence_penalty' => 0.6,
                     ]);

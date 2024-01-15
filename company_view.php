@@ -430,8 +430,8 @@ $_SESSION['copid'] = $copid;
 
         <?php while ($row = mysqli_fetch_assoc($resultProjects)): ?>
             <a href="project.php?project_id=<?php echo $row['Project_ID']; ?>" class="project-card">
-                <div class="status-badge" style="visibility: hidden;">Phase 1 on progress</div>
-                <div class="status-badge2">Phase 2 on progress</div>
+                <!-- <div class="status-badge" style="visibility: hidden;">Phase 1 on progress</div>
+                <div class="status-badge2">Phase 2 on progress</div> -->
                 <div>
                     <div class="project-title">
                         <p>
