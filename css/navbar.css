@@ -4,6 +4,7 @@
     box-sizing: border-box;
 }
 
+
 :root {
     --pblue-color: #006BB9;
     --pyellow-color: #FF9D00;
@@ -228,4 +229,25 @@ body::-webkit-scrollbar-thumb {
 
 body::-webkit-scrollbar-track {
     background-color: #ff9d004c !important;
+}
+
+.create-company-text {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+
+.evalBtn {
+    background-color: #3a3a3a35;
+    color: white;
+    /* border: 1px solid #3a3a3a35; */
+    cursor: default;
+
+}
+
+
+.evalBtn:hover {
+    background-color: #3a3a3a35;
+    /* #006cb956; */
 }

@@ -214,8 +214,14 @@ if ($hasCompany) {
             if (!$result) {
                 die("Error in the SQL query: " . mysqli_error($conn));
             }
+            if (mysqli_num_rows($result) < 1){
+                echo "<br><br><br><br><br><br><br><br><br><br><p style='text-align: center;'>No invitation requests at the moment.<p>";
+                }
+                
 
             while ($row = mysqli_fetch_assoc($result)) {
+
+
                 date_default_timezone_set('Asia/Manila');
 
                 $projectDate = new DateTime($row['Project_date']);
@@ -223,7 +229,7 @@ if ($hasCompany) {
                 $timeElapsed = $currentDate->getTimestamp() - $projectDate->getTimestamp();
 
                 if ($timeElapsed < 60) {
-                    $projectDate = 'Just Now';
+                    $projectDate = 'Just now';
                 } elseif ($timeElapsed < 3600) {
                     $minutes = floor($timeElapsed / 60);
                     $projectDate = ($minutes == 1) ? '1 min ago' : $minutes . ' mins ago';

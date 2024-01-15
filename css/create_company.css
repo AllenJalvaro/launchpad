@@ -69,3 +69,18 @@ input[type="file"]:hover {
 #submit-btn:hover {
     background: var(--bhov-color);
 }
+
+
+.company_description::-webkit-scrollbar {
+    width: 12px !important; 
+}
+
+.company_description::-webkit-scrollbar-thumb {
+    background-color: #006cb94e !important; 
+    border-radius: 6px !important;
+}
+
+.company_description::-webkit-scrollbar-track {
+    background-color: #006cb929 !important;
+}
+

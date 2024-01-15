@@ -1,0 +1,60 @@
+.video-preview-container {
+    width: 640px;
+    height: 360px;
+    position: relative;
+    border-radius: 20px;
+  }
+
+  .video-preview {
+    width: 100%;
+    height: 100%;
+    border-radius: 20px;
+  }
+
+  .sectionTitle2 {
+    color: #024676 !important;
+    font-weight: bold;
+    font-size:30px !important;
+    margin: 0;
+}
+
+
+  .cancel-update-button {
+    cursor: pointer;
+    margin: 0;
+    color: gray;
+    display: none;
+}
+
+.cancel-update-button:hover {
+    color: #cc0000;
+}
+
+.btnPublic {
+    background-color: #006BB9;
+    color: white;
+    /* border: 1px solid #3a3a3a35; */
+    cursor: pointer;
+
+}
+
+
+.btnPublic:hover {
+    background-color: #034370;
+    /* #006cb956; */
+}
+
+
+.btnPrivate {
+    background-color: #ba2727;
+    color: white;
+    /* border: 1px solid #3a3a3a35; */
+    cursor: pointer;
+
+}
+
+
+.btnPrivate:hover {
+    background-color: #751212;
+    /* #006cb956; */
+}

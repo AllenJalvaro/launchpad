@@ -264,14 +264,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 
         <form action="create-company.php" method="post" enctype="multipart/form-data">
-            <h2>Create New Company</h2><br>
+            <h2>Create New Startup Company</h2><br>
             <label for="company_name">Company Name:</label>
             <input type="text" id="company_name" name="company_name" required>
 
             <br><br>
 
             <label for="company_description">Company Description:</label>
-            <textarea id="company_description" name="company_description" rows="10" required></textarea>
+            <textarea id="company_description" name="company_description" class="company_description" rows="10" required></textarea>
 
             <br><br>
 

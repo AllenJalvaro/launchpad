@@ -54,7 +54,7 @@
     <link rel="icon" href="/launchpad/images/favicon.svg" />
     <link rel="stylesheet" href="css/navbar.css">
     <!-- same style sa invitation -->
-    <link rel="stylesheet" href="css/invitation.css"> 
+    <link rel="stylesheet" href="css/investorRequest.css"> 
 
     <style>
         .modal {
@@ -223,6 +223,9 @@
             if (!$result) {
                 die("Error in the SQL query: " . mysqli_error($conn));
             }
+            if (mysqli_num_rows($result) < 1){
+                echo "<br><br><br><br><br><br><br><br><br><br><p style='text-align: center;'>No investment requests at the moment.<p>";
+                }
 
             while ($row = mysqli_fetch_assoc($result)) {
                 $dateString = htmlspecialchars($row['Submission_date']);
@@ -302,16 +305,18 @@
             // Function to update modal content with investor details
             function updateModalContent(investorDetails) {
                 modalContent.innerHTML = `
-                    <span class="close" style="text-align: right; width: 100%;">&times;</span>
-                    <p>Project Title: ${investorDetails.Project_title}</p>
-                    <p>Investor Name: ${investorDetails.InvestorName}</p>
+                <span class="close" style="float: right;">&times;</span>
+               
+                <b style="font-size:20px; color:#006BB9">INVESTOR'S DETAILS</b> <br><br>
+                    <p><b>Project:</b> ${investorDetails.Project_title}</p>
+                    <p><b>Investor Name:</b> ${investorDetails.InvestorName}</p>
                     <!-- pag ito ginamit, mag oopen muna siya ng email app -->
                     <!--<p>Investor Email: <a href="mailto:${investorDetails.Email}">${investorDetails.Email}</a></p>-->
                     <!-- pag ito naman ginamit, mag oopen ng new link tas dun na mag eemail/galing ito sa stackoverflow/mas okay daw to -->
-                    <p>Investor Email: <a href="https://mail.google.com/mail/?view=cm&fs=1&tf=1&to=${investorDetails.Email}" target="_blank">${investorDetails.Email}</a></p>
-                    <p>Source of income: ${investorDetails.SourceofIncome}</p>
-                    <p>Requested documents: ${investorDetails.RequestedDocuments}</p>
-                    <p>Identity proof:</p>
+                    <p><b>Investor Email:</b> <a href="https://mail.google.com/mail/?view=cm&fs=1&tf=1&to=${investorDetails.Email}" target="_blank">${investorDetails.Email}</a></p>
+                    <p><b>Source of income:</b> ${investorDetails.SourceofIncome}</p>
+                    <p><b>Requested documents:</b><br><br> ${investorDetails.RequestedDocuments}</p>
+                    <p><b>Identity proof:</b></p><br>
                     <img src='${investorDetails.IdentityProof}' width='100%'>
                 `;
 
